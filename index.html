@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTC: On-Chain Pricing Models | ChainPlex</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #f8f9fa;
+      color: #1a1a2e;
+    }
+    .header {
+      background: white;
+      border-bottom: 1px solid #e9ecef;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f7931a;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: #1a1a2e; }
+    .subtitle {
+      font-size: 12px;
+      color: #6c757d;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+    .chart-container {
+      background: white;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      padding: 20px;
+    }
+    .chart-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    .chart-desc {
+      font-size: 12px;
+      color: #6c757d;
+      margin-bottom: 16px;
+    }
+    #chart { width: 100%; height: 600px; }
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 600px;
+      font-size: 16px;
+      color: #6c757d;
+    }
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn {
+      padding: 6px 14px;
+      border: 1px solid #dee2e6;
+      background: white;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'Raleway', sans-serif;
+      cursor: pointer;
+      font-weight: 500;
+      color: #495057;
+      transition: all 0.2s;
+    }
+    .btn:hover, .btn.active {
+      background: #f7931a;
+      color: white;
+      border-color: #f7931a;
+    }
+    .legend-info {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #495057;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 11px;
+      color: #adb5bd;
+    }
+    .price-badge {
+      background: #f7931a;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">Chain<span>Plex</span>.io</div>
+    <div class="subtitle">On-Chain Crypto Analytics</div>
+  </div>
+  <div id="currentPrice" class="price-badge">Loading...</div>
+</div>
+
+<div class="chart-container">
+  <div class="chart-title">BTC: On-Chain Pricing Models</div>
+  <div class="chart-desc">Key on-chain valuation metrics overlaid on Bitcoin price — log scale. Click legend items to show/hide.</div>
+
+  <div class="controls">
+    <button class="btn" onclick="setRange('1y')">1Y</button>
+    <button class="btn" onclick="setRange('2y')">2Y</button>
+    <button class="btn" onclick="setRange('4y')">4Y</button>
+    <button class="btn active" onclick="setRange('all')">All</button>
+    <button class="btn" onclick="toggleScale()" id="scaleBtn">Linear Scale</button>
+  </div>
+
+  <div id="chart"><div class="loading">⛓ Loading on-chain data...</div></div>
+
+  <div class="legend-info">
+    <div class="legend-item"><div class="legend-dot" style="background:#000"></div> BTC Price</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7b2d8b"></div> 200W MA (Cycle Floor)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a6fc4"></div> Realized Price (365D SMA)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div> True Market Mean (155D SMA)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Balanced Price (50% Realized)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e67e22"></div> 2Y MA Multiplier (2× 2Y MA)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div> 2Y MA (Accumulation Zone)</div>
+  </div>
+</div>
+
+<div class="footer">
+  Data: CoinGecko API · Updated daily · Not financial advice
+</div>
+
+<script>
+let allDates = [];
+let allPrices = [];
+let isLogScale = true;
+let chartData = [];
+
+async function fetchBTCData() {
+  try {
+    // Fetch max historical data in chunks
+    const url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=3650&interval=daily';
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.prices) throw new Error('No data');
+
+    const prices = data.prices;
+    allDates = prices.map(p => new Date(p[0]).toISOString().split('T')[0]);
+    allPrices = prices.map(p => p[1]);
+
+    // Update current price badge
+    const latest = allPrices[allPrices.length - 1];
+    document.getElementById('currentPrice').textContent = '$' + latest.toLocaleString('en-US', {maximumFractionDigits: 0});
+
+    buildChart();
+  } catch (e) {
+    document.getElementById('chart').innerHTML = '<div class="loading">⚠️ Failed to load data. Please refresh.</div>';
+    console.error(e);
+  }
+}
+
+function sma(prices, period) {
+  return prices.map((_, i) => {
+    if (i < period - 1) return null;
+    const slice = prices.slice(i - period + 1, i + 1);
+    return slice.reduce((a, b) => a + b, 0) / period;
+  });
+}
+
+function buildChart() {
+  const prices = allPrices;
+  const dates = allDates;
+
+  // Calculate indicators
+  const ma200w = sma(prices, 200 * 7); // 200-week = 1400 days (approx)
+  const ma365  = sma(prices, 365);      // Realized Price proxy
+  const ma155  = sma(prices, 155);      // True Market Mean
+  const ma2y   = sma(prices, 730);      // 2-Year MA
+  const ma2x   = ma2y.map(v => v ? v * 2 : null);  // 2Y MA Multiplier
+  const balanced = ma365.map(v => v ? v * 0.5 : null); // Balanced Price
+
+  chartData = [
+    {
+      x: dates, y: prices,
+      name: 'BTC Price',
+      line: { color: '#000000', width: 1.5 },
+      mode: 'lines', type: 'scatter',
+    },
+    {
+      x: dates, y: ma200w,
+      name: '200W MA',
+      line: { color: '#7b2d8b', width: 2, dash: 'solid' },
+      mode: 'lines', type: 'scatter',
+    },
+    {
+      x: dates, y: ma365,
+      name: 'Realized Price (365D)',
+      line: { color: '#1a6fc4', width: 2 },
+      mode: 'lines', type: 'scatter',
+    },
+    {
+      x: dates, y: ma155,
+      name: 'True Market Mean (155D)',
+      line: { color: '#e74c3c', width: 2 },
+      mode: 'lines', type: 'scatter',
+    },
+    {
+      x: dates, y: balanced,
+      name: 'Balanced Price',
+      line: { color: '#27ae60', width: 2 },
+      mode: 'lines', type: 'scatter',
+    },
+    {
+      x: dates, y: ma2x,
+      name: '2Y MA Multiplier (2×)',
+      line: { color: '#e67e22', width: 2 },
+      mode: 'lines', type: 'scatter',
+    },
+    {
+      x: dates, y: ma2y,
+      name: '2Y MA Accumulation',
+      line: { color: '#f39c12', width: 2, dash: 'dot' },
+      mode: 'lines', type: 'scatter',
+    },
+  ];
+
+  const layout = getLayout();
+  Plotly.newPlot('chart', chartData, layout, { responsive: true, displayModeBar: true });
+}
+
+function getLayout(dateRange) {
+  const layout = {
+    yaxis: {
+      type: isLogScale ? 'log' : 'linear',
+      tickformat: isLogScale ? '' : '$,.0f',
+      title: 'Price (USD)',
+      gridcolor: '#f0f0f0',
+      showgrid: true,
+    },
+    xaxis: {
+      type: 'date',
+      gridcolor: '#f0f0f0',
+      showgrid: true,
+    },
+    plot_bgcolor: '#ffffff',
+    paper_bgcolor: '#ffffff',
+    legend: {
+      orientation: 'h',
+      y: -0.15,
+      x: 0,
+      font: { family: 'Raleway', size: 11 },
+    },
+    margin: { t: 20, r: 20, b: 80, l: 70 },
+    hovermode: 'x unified',
+    font: { family: 'Raleway' },
+  };
+
+  if (dateRange) {
+    layout.xaxis.range = dateRange;
+  }
+
+  return layout;
+}
+
+function setRange(range) {
+  document.querySelectorAll('.controls .btn').forEach(b => {
+    if (['1y','2y','4y','all'].some(r => b.textContent.toLowerCase().includes(r.replace('y',' y') ) || b.onclick?.toString().includes(`'${r}'`))) {
+      b.classList.remove('active');
+    }
+  });
+  event.target.classList.add('active');
+
+  const now = new Date();
+  let start;
+  if (range === '1y') start = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+  else if (range === '2y') start = new Date(now.getFullYear() - 2, now.getMonth(), now.getDate());
+  else if (range === '4y') start = new Date(now.getFullYear() - 4, now.getMonth(), now.getDate());
+  else start = new Date('2010-01-01');
+
+  Plotly.relayout('chart', {
+    'xaxis.range': [start.toISOString().split('T')[0], new Date().toISOString().split('T')[0]]
+  });
+}
+
+function toggleScale() {
+  isLogScale = !isLogScale;
+  document.getElementById('scaleBtn').textContent = isLogScale ? 'Linear Scale' : 'Log Scale';
+  Plotly.relayout('chart', { 'yaxis.type': isLogScale ? 'log' : 'linear' });
+}
+
+// Load data on page start
+fetchBTCData();
+</script>
+
+</body>
+</html>
