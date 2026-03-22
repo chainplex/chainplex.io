@@ -145,7 +145,7 @@
 
   <div class="legend-info">
     <div class="legend-item"><div class="legend-dot" style="background:#000"></div> BTC Price</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#7b2d8b"></div> 200W MA (Cycle Floor)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7b2d8b"></div> 200D MA (Cycle Floor)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#1a6fc4"></div> Realized Price (365D SMA)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div> True Market Mean (155D SMA)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Balanced Price (50% Realized)</div>
@@ -166,18 +166,23 @@ let chartData = [];
 
 async function fetchBTCData() {
   try {
-    document.getElementById('chart').innerHTML = '<div class="loading">⛓ Fetching 365 days of BTC data...</div>';
+    document.getElementById('chart').innerHTML = '<div class="loading">⛓ Fetching BTC historical data from Kraken...</div>';
 
-    // CoinGecko free API supports up to 365 days with daily interval
-    const url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily';
+    // Kraken gives up to 720 days of daily candles — free, no key needed
+    // interval=1440 = daily, since=1 = from beginning
+    const url = 'https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440&since=1';
     const res = await fetch(url);
     const data = await res.json();
 
-    if (!data.prices || data.prices.length === 0) throw new Error('No data returned');
+    if (data.error && data.error.length > 0) throw new Error(data.error[0]);
 
-    const prices = data.prices;
-    allDates = prices.map(p => new Date(p[0]).toISOString().split('T')[0]);
-    allPrices = prices.map(p => p[1]);
+    const candles = data.result['XXBTZUSD'];
+    // candle format: [time, open, high, low, close, vwap, volume, count]
+    // Remove last candle (incomplete current day)
+    const complete = candles.slice(0, -1);
+
+    allDates = complete.map(c => new Date(c[0] * 1000).toISOString().split('T')[0]);
+    allPrices = complete.map(c => parseFloat(c[4])); // close price
 
     // Update current price badge
     const latest = allPrices[allPrices.length - 1];
@@ -202,13 +207,14 @@ function buildChart() {
   const prices = allPrices;
   const dates = allDates;
 
-  // Calculate indicators (adjusted for available data range)
-  const ma200w = sma(prices, Math.min(200, prices.length - 1)); // 200D MA (proxy for 200W)
-  const ma365  = sma(prices, Math.min(365, prices.length - 1)); // Realized Price proxy
-  const ma155  = sma(prices, Math.min(155, prices.length - 1)); // True Market Mean
-  const ma2y   = sma(prices, Math.min(200, prices.length - 1)); // 2-Year MA proxy
-  const ma2x   = ma2y.map(v => v ? v * 2 : null);  // 2Y MA Multiplier
-  const balanced = ma365.map(v => v ? v * 0.5 : null); // Balanced Price
+  // Calculate indicators — Kraken gives ~720 days so most SMAs will show
+  const n = prices.length;
+  const ma200  = sma(prices, Math.min(200, n - 1)); // 200D MA
+  const ma365  = sma(prices, Math.min(365, n - 1)); // Realized Price proxy (365D)
+  const ma155  = sma(prices, Math.min(155, n - 1)); // True Market Mean
+  const ma2y   = sma(prices, Math.min(730, n - 1)); // 2-Year MA
+  const ma2x   = ma2y.map(v => v ? v * 2 : null);   // 2Y MA Multiplier
+  const balanced = ma365.map(v => v ? v * 0.5 : null); // Balanced Price = 50% of Realized
 
   chartData = [
     {
@@ -218,8 +224,8 @@ function buildChart() {
       mode: 'lines', type: 'scatter',
     },
     {
-      x: dates, y: ma200w,
-      name: '200W MA',
+      x: dates, y: ma200,
+      name: '200D MA',
       line: { color: '#7b2d8b', width: 2, dash: 'solid' },
       mode: 'lines', type: 'scatter',
     },
