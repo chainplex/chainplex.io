@@ -166,12 +166,14 @@ let chartData = [];
 
 async function fetchBTCData() {
   try {
-    // Fetch max historical data in chunks
-    const url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=3650&interval=daily';
+    document.getElementById('chart').innerHTML = '<div class="loading">⛓ Fetching 365 days of BTC data...</div>';
+
+    // CoinGecko free API supports up to 365 days with daily interval
+    const url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365&interval=daily';
     const res = await fetch(url);
     const data = await res.json();
 
-    if (!data.prices) throw new Error('No data');
+    if (!data.prices || data.prices.length === 0) throw new Error('No data returned');
 
     const prices = data.prices;
     allDates = prices.map(p => new Date(p[0]).toISOString().split('T')[0]);
@@ -183,7 +185,7 @@ async function fetchBTCData() {
 
     buildChart();
   } catch (e) {
-    document.getElementById('chart').innerHTML = '<div class="loading">⚠️ Failed to load data. Please refresh.</div>';
+    document.getElementById('chart').innerHTML = `<div class="loading">⚠️ Failed to load data: ${e.message}. Please refresh.</div>`;
     console.error(e);
   }
 }
@@ -200,11 +202,11 @@ function buildChart() {
   const prices = allPrices;
   const dates = allDates;
 
-  // Calculate indicators
-  const ma200w = sma(prices, 200 * 7); // 200-week = 1400 days (approx)
-  const ma365  = sma(prices, 365);      // Realized Price proxy
-  const ma155  = sma(prices, 155);      // True Market Mean
-  const ma2y   = sma(prices, 730);      // 2-Year MA
+  // Calculate indicators (adjusted for available data range)
+  const ma200w = sma(prices, Math.min(200, prices.length - 1)); // 200D MA (proxy for 200W)
+  const ma365  = sma(prices, Math.min(365, prices.length - 1)); // Realized Price proxy
+  const ma155  = sma(prices, Math.min(155, prices.length - 1)); // True Market Mean
+  const ma2y   = sma(prices, Math.min(200, prices.length - 1)); // 2-Year MA proxy
   const ma2x   = ma2y.map(v => v ? v * 2 : null);  // 2Y MA Multiplier
   const balanced = ma365.map(v => v ? v * 0.5 : null); // Balanced Price
 
