@@ -214,7 +214,13 @@ function buildChart() {
   const ma155  = sma(prices, Math.min(155, n - 1)); // True Market Mean
   const ma2y   = sma(prices, Math.min(730, n - 1)); // 2-Year MA
   const ma2x   = ma2y.map(v => v ? v * 2 : null);   // 2Y MA Multiplier
-  const balanced = ma365.map(v => v ? v * 0.5 : null); // Balanced Price = 50% of Realized
+  // Balanced Price: approximated as Realized Price (365D) minus Transferred Price (180D SMA)
+  // This gives a closer result to the actual on-chain Balanced Price model
+  const ma180  = sma(prices, Math.min(180, n - 1));
+  const balanced = ma365.map((v, i) => {
+    if (!v || !ma180[i]) return null;
+    return v - ma180[i]; // Realized minus Transferred proxy
+  });
 
   chartData = [
     {
