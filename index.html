@@ -3,332 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BTC: On-Chain Pricing Models | ChainPlex</title>
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Raleway', sans-serif;
-      background: #f8f9fa;
-      color: #1a1a2e;
-    }
-    .header {
-      background: white;
-      border-bottom: 1px solid #e9ecef;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-      color: #f7931a;
-      letter-spacing: -0.5px;
-    }
-    .logo span { color: #1a1a2e; }
-    .subtitle {
-      font-size: 12px;
-      color: #6c757d;
-      font-weight: 400;
-      margin-top: 2px;
-    }
-    .chart-container {
-      background: white;
-      margin: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      padding: 20px;
-    }
-    .chart-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #1a1a2e;
-      margin-bottom: 4px;
-    }
-    .chart-desc {
-      font-size: 12px;
-      color: #6c757d;
-      margin-bottom: 16px;
-    }
-    #chart { width: 100%; height: 600px; }
-    .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 600px;
-      font-size: 16px;
-      color: #6c757d;
-    }
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .btn {
-      padding: 6px 14px;
-      border: 1px solid #dee2e6;
-      background: white;
-      border-radius: 6px;
-      font-size: 12px;
-      font-family: 'Raleway', sans-serif;
-      cursor: pointer;
-      font-weight: 500;
-      color: #495057;
-      transition: all 0.2s;
-    }
-    .btn:hover, .btn.active {
-      background: #f7931a;
-      color: white;
-      border-color: #f7931a;
-    }
-    .legend-info {
-      margin-top: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #495057;
-    }
-    .legend-dot {
-      width: 12px;
-      height: 3px;
-      border-radius: 2px;
-    }
-    .footer {
-      text-align: center;
-      padding: 16px;
-      font-size: 11px;
-      color: #adb5bd;
-    }
-    .price-badge {
-      background: #f7931a;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-  </style>
+  <title>ChainPlex — Crypto On-Chain Analytics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="header">
-  <div>
-    <div class="logo">Chain<span>Plex</span>.io</div>
-    <div class="subtitle">On-Chain Crypto Analytics</div>
+<nav>
+  <a href="/" class="nav-logo">Chain<span>Plex</span></a>
+  <div class="nav-links">
+    <a href="/" class="active">Home</a>
+    <a href="btc.html">BTC Charts</a>
+    <a href="tao.html">TAO / Bittensor</a>
+    <a href="#coming-soon">SOL</a>
+    <a href="#coming-soon">DeFi</a>
+    <span id="btcPrice" class="nav-badge">Loading...</span>
   </div>
-  <div id="currentPrice" class="price-badge">Loading...</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">⛓ On-Chain Intelligence</div>
+  <h1>Crypto Analytics<br>for <span>Serious</span> Investors</h1>
+  <p>On-chain metrics, pricing models, and subnet analytics for Bitcoin, Bittensor, Solana and the emerging crypto economy.</p>
+  <div class="hero-buttons">
+    <a href="btc.html" class="btn-primary">📈 BTC Charts</a>
+    <a href="tao.html" class="btn-secondary">🧠 TAO / Bittensor</a>
+  </div>
+</section>
+
+<!-- LIVE STATS -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-item">
+    <div class="stat-value" id="s-btc">—</div>
+    <div class="stat-label">Bitcoin (BTC)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="s-tao">—</div>
+    <div class="stat-label">Bittensor (TAO)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="s-sol">—</div>
+    <div class="stat-label">Solana (SOL)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="s-sui">—</div>
+    <div class="stat-label">Sui (SUI)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="s-hype">—</div>
+    <div class="stat-label">Hyperliquid (HYPE)</div>
+  </div>
 </div>
 
-<div class="chart-container">
-  <div class="chart-title">BTC: On-Chain Pricing Models</div>
-  <div class="chart-desc">Key on-chain valuation metrics overlaid on Bitcoin price — log scale. Click legend items to show/hide.</div>
+<!-- CHARTS SECTION -->
+<div class="section">
+  <div class="section-title">📊 Analytics Dashboards</div>
+  <p class="section-desc">Deep on-chain analysis for the most important assets in crypto</p>
 
-  <div class="controls">
-    <button class="btn" onclick="setRange('1y')">1Y</button>
-    <button class="btn" onclick="setRange('2y')">2Y</button>
-    <button class="btn" onclick="setRange('4y')">4Y</button>
-    <button class="btn active" onclick="setRange('all')">All</button>
-    <button class="btn" onclick="toggleScale()" id="scaleBtn">Linear Scale</button>
-  </div>
+  <div class="cards-grid">
+    <a href="btc.html" class="card">
+      <div class="card-icon">₿</div>
+      <div class="card-title">Bitcoin On-Chain Pricing</div>
+      <div class="card-desc">Realized Price, Balanced Price, True Market Mean, 200D MA and more. Identify cycle tops and bottoms.</div>
+      <span class="card-tag btc">BTC</span>
+      <span class="card-tag free">Free</span>
+    </a>
 
-  <div id="chart"><div class="loading">⛓ Loading on-chain data...</div></div>
+    <a href="tao.html" class="card">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">Bittensor (TAO) Analytics</div>
+      <div class="card-desc">Subnet ecosystem overview, emission schedules, tokenomics, validator rankings, and TAO price analysis.</div>
+      <span class="card-tag">TAO</span>
+      <span class="card-tag free">Free</span>
+    </a>
 
-  <div class="legend-info">
-    <div class="legend-item"><div class="legend-dot" style="background:#000"></div> BTC Price</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#7b2d8b"></div> 200D MA (Cycle Floor)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#1a6fc4"></div> Realized Price (365D SMA)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div> True Market Mean (155D SMA)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Balanced Price (50% Realized)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e67e22"></div> 2Y MA Multiplier (2× 2Y MA)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div> 2Y MA (Accumulation Zone)</div>
+    <a href="#coming-soon" class="card" style="opacity:0.5">
+      <div class="card-icon">◎</div>
+      <div class="card-title">Solana Ecosystem</div>
+      <div class="card-desc">SOL staking yields, DeFi TVL, DEX volumes, and key ecosystem metrics for Solana.</div>
+      <span class="card-tag">SOL</span>
+      <span style="font-size:11px;color:var(--muted);margin-top:12px;display:block">Coming soon</span>
+    </a>
+
+    <a href="#coming-soon" class="card" style="opacity:0.5">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Hyperliquid (HYPE)</div>
+      <div class="card-desc">Perps volume, open interest, funding rates, and HYPE token metrics for the on-chain trading platform.</div>
+      <span class="card-tag">HYPE</span>
+      <span style="font-size:11px;color:var(--muted);margin-top:12px;display:block">Coming soon</span>
+    </a>
+
+    <a href="#coming-soon" class="card" style="opacity:0.5">
+      <div class="card-icon">🌊</div>
+      <div class="card-title">DeFi Overview</div>
+      <div class="card-desc">Cross-chain TVL, DEX volumes, stablecoin flows, and yield opportunities across major DeFi protocols.</div>
+      <span class="card-tag">DeFi</span>
+      <span style="font-size:11px;color:var(--muted);margin-top:12px;display:block">Coming soon</span>
+    </a>
+
+    <a href="#coming-soon" class="card" style="opacity:0.5">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Portfolio Tracker</div>
+      <div class="card-desc">Track your crypto portfolio with on-chain insights, alerts, and performance analytics.</div>
+      <span class="card-tag">All Assets</span>
+      <span style="font-size:11px;color:var(--muted);margin-top:12px;display:block">Coming soon</span>
+    </a>
   </div>
 </div>
 
-<div class="footer">
-  Data: CoinGecko API · Updated daily · Not financial advice
+<!-- WHY CHAINPLEX -->
+<div style="background:rgba(255,255,255,0.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 40px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-title" style="text-align:center;margin-bottom:8px">Why ChainPlex?</div>
+    <p style="text-align:center;color:var(--muted);margin-bottom:48px">Built by investors, for investors</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;text-align:center;">
+      <div>
+        <div style="font-size:36px;margin-bottom:12px">🔍</div>
+        <div style="font-weight:600;margin-bottom:8px">On-Chain First</div>
+        <div style="font-size:13px;color:var(--muted)">We go deeper than price. On-chain data reveals what the market really thinks.</div>
+      </div>
+      <div>
+        <div style="font-size:36px;margin-bottom:12px">🆓</div>
+        <div style="font-weight:600;margin-bottom:8px">Free to Use</div>
+        <div style="font-size:13px;color:var(--muted)">Core analytics are always free. No paywalls on the data that matters most.</div>
+      </div>
+      <div>
+        <div style="font-size:36px;margin-bottom:12px">🧠</div>
+        <div style="font-weight:600;margin-bottom:8px">TAO Specialists</div>
+        <div style="font-size:13px;color:var(--muted)">The most comprehensive Bittensor subnet analytics available anywhere.</div>
+      </div>
+      <div>
+        <div style="font-size:36px;margin-bottom:12px">📱</div>
+        <div style="font-weight:600;margin-bottom:8px">Clean & Fast</div>
+        <div style="font-size:13px;color:var(--muted)">No clutter. No noise. Just the signals that matter for your decisions.</div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<footer>
+  <div style="margin-bottom:12px">
+    <a href="/">Home</a> · 
+    <a href="btc.html">BTC</a> · 
+    <a href="tao.html">TAO</a> · 
+    <a href="https://x.com/chainplexio" target="_blank">@chainplexio</a>
+  </div>
+  © 2026 ChainPlex.io · Not financial advice · Data from public APIs
+</footer>
 
 <script>
-let allDates = [];
-let allPrices = [];
-let isLogScale = true;
-let chartData = [];
-
-async function fetchBTCData() {
+async function loadPrices() {
   try {
-    document.getElementById('chart').innerHTML = '<div class="loading">⛓ Fetching BTC historical data from Kraken...</div>';
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,bittensor,solana,sui,hyperliquid&vs_currencies=usd&include_24hr_change=true');
+    const d = await res.json();
 
-    // Kraken gives up to 720 days of daily candles — free, no key needed
-    // interval=1440 = daily, since=1 = from beginning
-    const url = 'https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440&since=1';
-    const res = await fetch(url);
-    const data = await res.json();
+    const fmt = (v) => '$' + v.toLocaleString('en-US', {maximumFractionDigits: v > 1000 ? 0 : 2});
+    const chg = (c) => (c >= 0 ? '+' : '') + c.toFixed(2) + '%';
 
-    if (data.error && data.error.length > 0) throw new Error(data.error[0]);
+    const items = [
+      { id: 's-btc', coin: 'bitcoin', navId: 'btcPrice' },
+      { id: 's-tao', coin: 'bittensor' },
+      { id: 's-sol', coin: 'solana' },
+      { id: 's-sui', coin: 'sui' },
+      { id: 's-hype', coin: 'hyperliquid' },
+    ];
 
-    const candles = data.result['XXBTZUSD'];
-    // candle format: [time, open, high, low, close, vwap, volume, count]
-    // Remove last candle (incomplete current day)
-    const complete = candles.slice(0, -1);
+    items.forEach(item => {
+      const coin = d[item.coin];
+      if (!coin) return;
+      const el = document.getElementById(item.id);
+      const change = coin.usd_24h_change;
+      el.textContent = fmt(coin.usd);
+      el.className = 'stat-value ' + (change >= 0 ? 'up' : 'down');
+      el.title = chg(change) + ' 24h';
 
-    allDates = complete.map(c => new Date(c[0] * 1000).toISOString().split('T')[0]);
-    allPrices = complete.map(c => parseFloat(c[4])); // close price
-
-    // Update current price badge
-    const latest = allPrices[allPrices.length - 1];
-    document.getElementById('currentPrice').textContent = '$' + latest.toLocaleString('en-US', {maximumFractionDigits: 0});
-
-    buildChart();
-  } catch (e) {
-    document.getElementById('chart').innerHTML = `<div class="loading">⚠️ Failed to load data: ${e.message}. Please refresh.</div>`;
-    console.error(e);
+      if (item.navId) {
+        document.getElementById(item.navId).textContent = fmt(coin.usd);
+      }
+    });
+  } catch(e) {
+    console.error('Price fetch failed', e);
   }
 }
 
-function sma(prices, period) {
-  return prices.map((_, i) => {
-    if (i < period - 1) return null;
-    const slice = prices.slice(i - period + 1, i + 1);
-    return slice.reduce((a, b) => a + b, 0) / period;
-  });
-}
-
-function buildChart() {
-  const prices = allPrices;
-  const dates = allDates;
-
-  // Calculate indicators — Kraken gives ~720 days so most SMAs will show
-  const n = prices.length;
-  const ma200  = sma(prices, Math.min(200, n - 1)); // 200D MA
-  const ma365  = sma(prices, Math.min(365, n - 1)); // Realized Price proxy (365D)
-  const ma155  = sma(prices, Math.min(155, n - 1)); // True Market Mean
-  const ma2y   = sma(prices, Math.min(730, n - 1)); // 2-Year MA
-  const ma2x   = ma2y.map(v => v ? v * 2 : null);   // 2Y MA Multiplier
-  // Balanced Price: ~45% of 365D SMA approximates the on-chain Balanced Price
-  // (Real balanced price = Realized Price - Transferred Price, requires UTXO data)
-  const balanced = ma365.map(v => v ? v * 0.45 : null);
-
-  chartData = [
-    {
-      x: dates, y: prices,
-      name: 'BTC Price',
-      line: { color: '#000000', width: 1.5 },
-      mode: 'lines', type: 'scatter',
-    },
-    {
-      x: dates, y: ma200,
-      name: '200D MA',
-      line: { color: '#7b2d8b', width: 2, dash: 'solid' },
-      mode: 'lines', type: 'scatter',
-    },
-    {
-      x: dates, y: ma365,
-      name: 'Realized Price (365D)',
-      line: { color: '#1a6fc4', width: 2 },
-      mode: 'lines', type: 'scatter',
-    },
-    {
-      x: dates, y: ma155,
-      name: 'True Market Mean (155D)',
-      line: { color: '#e74c3c', width: 2 },
-      mode: 'lines', type: 'scatter',
-    },
-    {
-      x: dates, y: balanced,
-      name: 'Balanced Price',
-      line: { color: '#27ae60', width: 2 },
-      mode: 'lines', type: 'scatter',
-    },
-    {
-      x: dates, y: ma2x,
-      name: '2Y MA Multiplier (2×)',
-      line: { color: '#e67e22', width: 2 },
-      mode: 'lines', type: 'scatter',
-    },
-    {
-      x: dates, y: ma2y,
-      name: '2Y MA Accumulation',
-      line: { color: '#f39c12', width: 2, dash: 'dot' },
-      mode: 'lines', type: 'scatter',
-    },
-  ];
-
-  const layout = getLayout();
-  Plotly.newPlot('chart', chartData, layout, { responsive: true, displayModeBar: true });
-}
-
-function getLayout(dateRange) {
-  const layout = {
-    yaxis: {
-      type: isLogScale ? 'log' : 'linear',
-      tickformat: isLogScale ? '' : '$,.0f',
-      title: 'Price (USD)',
-      gridcolor: '#f0f0f0',
-      showgrid: true,
-    },
-    xaxis: {
-      type: 'date',
-      gridcolor: '#f0f0f0',
-      showgrid: true,
-    },
-    plot_bgcolor: '#ffffff',
-    paper_bgcolor: '#ffffff',
-    legend: {
-      orientation: 'h',
-      y: -0.15,
-      x: 0,
-      font: { family: 'Raleway', size: 11 },
-    },
-    margin: { t: 20, r: 20, b: 80, l: 70 },
-    hovermode: 'x unified',
-    font: { family: 'Raleway' },
-  };
-
-  if (dateRange) {
-    layout.xaxis.range = dateRange;
-  }
-
-  return layout;
-}
-
-function setRange(range) {
-  document.querySelectorAll('.controls .btn').forEach(b => {
-    if (['1y','2y','4y','all'].some(r => b.textContent.toLowerCase().includes(r.replace('y',' y') ) || b.onclick?.toString().includes(`'${r}'`))) {
-      b.classList.remove('active');
-    }
-  });
-  event.target.classList.add('active');
-
-  const now = new Date();
-  let start;
-  if (range === '1y') start = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-  else if (range === '2y') start = new Date(now.getFullYear() - 2, now.getMonth(), now.getDate());
-  else if (range === '4y') start = new Date(now.getFullYear() - 4, now.getMonth(), now.getDate());
-  else start = new Date('2010-01-01');
-
-  Plotly.relayout('chart', {
-    'xaxis.range': [start.toISOString().split('T')[0], new Date().toISOString().split('T')[0]]
-  });
-}
-
-function toggleScale() {
-  isLogScale = !isLogScale;
-  document.getElementById('scaleBtn').textContent = isLogScale ? 'Linear Scale' : 'Log Scale';
-  Plotly.relayout('chart', { 'yaxis.type': isLogScale ? 'log' : 'linear' });
-}
-
-// Load data on page start
-fetchBTCData();
+loadPrices();
+setInterval(loadPrices, 60000); // refresh every minute
 </script>
 
 </body>

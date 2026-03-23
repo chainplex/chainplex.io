@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bittensor (TAO) Analytics | ChainPlex</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Chain<span>Plex</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="btc.html">BTC Charts</a>
+    <a href="tao.html" class="active">TAO / Bittensor</a>
+    <span id="taoPrice" class="nav-badge" style="background:var(--tao)">Loading...</span>
+  </div>
+</nav>
+
+<!-- TAO HERO -->
+<section class="hero" style="background:radial-gradient(ellipse at top, rgba(108,92,231,0.2) 0%, transparent 60%)">
+  <div class="hero-badge" style="background:rgba(108,92,231,0.2);border-color:rgba(108,92,231,0.5);color:var(--tao-light)">🧠 Decentralized AI Network</div>
+  <h1>Bittensor <span class="tao-color">(TAO)</span><br>Deep Analytics</h1>
+  <p>The most comprehensive Bittensor subnet analytics. Understand the decentralized AI economy powering the future of machine intelligence.</p>
+  <div class="hero-buttons">
+    <a href="#subnets" class="btn-primary" style="background:var(--tao)">Explore Subnets</a>
+    <a href="#tokenomics" class="btn-secondary">TAO Tokenomics</a>
+  </div>
+</section>
+
+<!-- LIVE TAO STATS -->
+<div class="stats-bar" id="taoStats">
+  <div class="stat-item">
+    <div class="stat-value" id="tao-price">—</div>
+    <div class="stat-label">TAO Price</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" style="color:var(--tao-light)">9,597,491</div>
+    <div class="stat-label">Circulating Supply</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" style="color:var(--tao-light)">21,000,000</div>
+    <div class="stat-label">Max Supply (like BTC)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" style="color:var(--tao-light)">65+</div>
+    <div class="stat-label">Active Subnets</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="tao-mcap">—</div>
+    <div class="stat-label">Market Cap</div>
+  </div>
+</div>
+
+<!-- WHAT IS BITTENSOR -->
+<div class="section">
+  <div class="subnet-hero">
+    <div class="subnet-hero-text">
+      <div style="color:var(--tao-light);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">What is Bittensor?</div>
+      <h2>The Decentralized AI Marketplace</h2>
+      <p style="margin-bottom:16px">Bittensor is a decentralized protocol that creates a marketplace for machine intelligence. AI models (miners) compete to produce the best outputs for each subnet's specific task. Validators score their work, and TAO rewards flow to the best performers.</p>
+      <p style="margin-bottom:16px">Think of it as Bitcoin's proof-of-work model, but instead of mining blocks, you're mining <strong style="color:white">useful AI intelligence</strong>. Each subnet is a specialized AI economy with its own incentive structure.</p>
+      <p>TAO is the native token that powers the entire ecosystem — used for staking, validator delegation, and subnet registration. Like Bitcoin, TAO has a fixed max supply of <strong style="color:white">21 million</strong> with halvings every ~10.5M blocks.</p>
+    </div>
+    <div class="subnet-stats">
+      <div class="subnet-stat">
+        <div class="subnet-stat-value">~7,200</div>
+        <div class="subnet-stat-label">TAO emitted per day</div>
+      </div>
+      <div class="subnet-stat">
+        <div class="subnet-stat-value">45.7%</div>
+        <div class="subnet-stat-label">Supply circulating</div>
+      </div>
+      <div class="subnet-stat">
+        <div class="subnet-stat-value">~4yr</div>
+        <div class="subnet-stat-label">Next halving</div>
+      </div>
+      <div class="subnet-stat">
+        <div class="subnet-stat-value">15-20%</div>
+        <div class="subnet-stat-label">Staking APY (est.)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAO PRICE CHART -->
+<div class="section" style="padding-top:0" id="tokenomics">
+  <div class="section-title">📈 TAO Price & Tokenomics</div>
+  <p class="section-desc">TAO price history and emission schedule</p>
+
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">TAO Price (2Y)</div>
+        <div class="chart-card-desc">Bittensor price from Kraken — 2 year daily candles</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="setTaoRange('1y')" class="btn" style="padding:4px 12px;font-size:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:white;border-radius:6px;cursor:pointer">1Y</button>
+        <button onclick="setTaoRange('all')" class="btn" style="padding:4px 12px;font-size:12px;background:var(--tao);border:none;color:white;border-radius:6px;cursor:pointer">All</button>
+      </div>
+    </div>
+    <div id="taoChart" style="height:350px;display:flex;align-items:center;justify-content:center;color:var(--muted)">Loading TAO data...</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">TAO Supply Schedule</div>
+          <div class="chart-card-desc">Emission over time — Bitcoin-like halving model</div>
+        </div>
+      </div>
+      <div id="supplyChart" style="height:260px"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Daily Emission Rate</div>
+          <div class="chart-card-desc">TAO emitted per day across all subnets</div>
+        </div>
+      </div>
+      <div id="emissionChart" style="height:260px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBNETS -->
+<div class="section" id="subnets" style="padding-top:0">
+  <div class="section-title">🌐 Bittensor Subnet Ecosystem</div>
+  <p class="section-desc">All active subnets — their purpose, category, and role in the decentralized AI economy</p>
+
+  <div class="subnet-table">
+    <div class="subnet-table-header">
+      <div>SN</div>
+      <div>Subnet</div>
+      <div>Category</div>
+      <div>Emissions</div>
+      <div>Status</div>
+    </div>
+
+    <!-- Top subnets with descriptions -->
+    <div class="subnet-row">
+      <div class="subnet-id">1</div>
+      <div>
+        <div class="subnet-name">Text Prompting (Apex)</div>
+        <div class="subnet-purpose">LLM response generation — miners serve language model completions to validators</div>
+      </div>
+      <div><span class="subnet-category text">Text/LLM</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:100%"></div><span style="font-size:12px;color:var(--muted)">High</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">2</div>
+      <div>
+        <div class="subnet-name">Omron</div>
+        <div class="subnet-purpose">Inference layer — provides verified AI inference with cryptographic proofs of computation</div>
+      </div>
+      <div><span class="subnet-category text">Inference</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:85%"></div><span style="font-size:12px;color:var(--muted)">High</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">3</div>
+      <div>
+        <div class="subnet-name">MyShell TTS</div>
+        <div class="subnet-purpose">Text-to-speech and voice synthesis — miners produce high-quality audio from text prompts</div>
+      </div>
+      <div><span class="subnet-category">Audio</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:70%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">4</div>
+      <div>
+        <div class="subnet-name">Targon</div>
+        <div class="subnet-purpose">Multi-modal AI — handles diverse AI tasks including text, image, and reasoning</div>
+      </div>
+      <div><span class="subnet-category text">Multi-modal</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:75%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">8</div>
+      <div>
+        <div class="subnet-name">Taoshi (PTN)</div>
+        <div class="subnet-purpose">Predictive trading network — miners predict financial market movements, best predictions earn TAO</div>
+      </div>
+      <div><span class="subnet-category data">Finance</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:80%"></div><span style="font-size:12px;color:var(--muted)">High</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">9</div>
+      <div>
+        <div class="subnet-name">Pretraining</div>
+        <div class="subnet-purpose">Foundation model training — miners train base language models from scratch, competing on loss metrics</div>
+      </div>
+      <div><span class="subnet-category compute">Training</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:90%"></div><span style="font-size:12px;color:var(--muted)">High</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">13</div>
+      <div>
+        <div class="subnet-name">Dataverse</div>
+        <div class="subnet-purpose">Decentralized data scraping and curation — miners collect and clean datasets for AI training</div>
+      </div>
+      <div><span class="subnet-category data">Data</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:65%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">18</div>
+      <div>
+        <div class="subnet-name">Cortex.t</div>
+        <div class="subnet-purpose">API access layer — provides unified API access to all Bittensor AI models for developers</div>
+      </div>
+      <div><span class="subnet-category text">API Layer</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:72%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">19</div>
+      <div>
+        <div class="subnet-name">Vision (Naïm)</div>
+        <div class="subnet-purpose">Image generation and understanding — miners generate and analyze images using vision models</div>
+      </div>
+      <div><span class="subnet-category vision">Vision</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:68%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">21</div>
+      <div>
+        <div class="subnet-name">FileTAO</div>
+        <div class="subnet-purpose">Decentralized file storage — miners store encrypted data chunks, competing on reliability and speed</div>
+      </div>
+      <div><span class="subnet-category storage">Storage</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:60%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">25</div>
+      <div>
+        <div class="subnet-name">Hivemind</div>
+        <div class="subnet-purpose">Collaborative model training — distributed training across multiple miners sharing gradient updates</div>
+      </div>
+      <div><span class="subnet-category compute">Training</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:55%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">27</div>
+      <div>
+        <div class="subnet-name">Compute (Taoverse)</div>
+        <div class="subnet-purpose">Decentralized GPU marketplace — miners rent compute to the network, competing on performance and price</div>
+      </div>
+      <div><span class="subnet-category compute">Compute</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:78%"></div><span style="font-size:12px;color:var(--muted)">High</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">32</div>
+      <div>
+        <div class="subnet-name">It's AI</div>
+        <div class="subnet-purpose">AI agent marketplace — miners build and deploy autonomous AI agents for various tasks</div>
+      </div>
+      <div><span class="subnet-category text">Agents</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:62%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row">
+      <div class="subnet-id">33</div>
+      <div>
+        <div class="subnet-name">Ready AI</div>
+        <div class="subnet-purpose">Video generation — miners generate high-quality video content from text and image prompts</div>
+      </div>
+      <div><span class="subnet-category vision">Video</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:58%"></div><span style="font-size:12px;color:var(--muted)">Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+
+    <div class="subnet-row" style="background:rgba(108,92,231,0.05)">
+      <div class="subnet-id" style="background:rgba(108,92,231,0.3);color:white">60+</div>
+      <div>
+        <div class="subnet-name">More subnets (SN36–SN65+)</div>
+        <div class="subnet-purpose">Coding assistants, translation, embeddings, knowledge graphs, bioinformatics, time series, and more...</div>
+      </div>
+      <div><span class="subnet-category">Various</span></div>
+      <div class="emission-bar-wrap"><div class="emission-bar" style="width:40%"></div><span style="font-size:12px;color:var(--muted)">Low-Med</span></div>
+      <div><span class="status-dot"></span><span style="font-size:12px">Active</span></div>
+    </div>
+  </div>
+
+  <!-- SUBNET CARDS - KEY ONES -->
+  <div style="margin-top:40px">
+    <div class="section-title" style="font-size:22px;margin-bottom:8px">🔑 Key Subnet Deep Dives</div>
+    <p class="section-desc">The most important subnets driving TAO value and ecosystem growth</p>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">💰</div>
+        <div class="card-title">SN8 — Taoshi (Trading)</div>
+        <div class="card-desc">The most financially relevant subnet. Miners submit trading signals (long/short) across crypto and equities. Best-performing predictions earn the most TAO. Real money is at stake — miners have actual skin in the game.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> This is DeFi + quant trading + AI all in one. If Taoshi signals work, it becomes a massive value-add and drives TAO demand.</div>
+        <span class="card-tag" style="background:rgba(0,184,148,0.2);color:var(--success)">Finance/Quant</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🏋️</div>
+        <div class="card-title">SN9 — Pretraining</div>
+        <div class="card-desc">Miners train foundation AI models from scratch and compete on benchmark performance. This is the "proof of useful work" at the core of Bittensor's value proposition — you earn TAO by making AI better.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> If this produces models competitive with GPT/Gemini, it's a paradigm shift. The race to train open, decentralized AI starts here.</div>
+        <span class="card-tag" style="background:rgba(231,76,60,0.2);color:var(--danger)">Model Training</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">SN27 — Compute</div>
+        <div class="card-desc">Decentralized GPU marketplace. Miners rent H100s, A100s and other hardware to the network. Validators verify compute tasks are completed correctly. Competes directly with AWS, Google Cloud, CoreWeave.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> GPU shortage is real. Unlocking idle compute globally at competitive prices could be worth billions.</div>
+        <span class="card-tag" style="background:rgba(231,76,60,0.2);color:var(--danger)">GPU/Compute</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🗄️</div>
+        <div class="card-title">SN21 — FileTAO</div>
+        <div class="card-desc">Decentralized file storage on Bittensor. Miners store encrypted data reliably across the network. Think Filecoin but with TAO incentives and the Bittensor consensus mechanism ensuring quality.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> AI needs data storage. Pairing SN9 (training) + SN21 (storage) creates a closed-loop decentralized AI infrastructure.</div>
+        <span class="card-tag" style="background:rgba(155,89,182,0.2);color:#a29bfe">Storage</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">SN18 — Cortex.t API</div>
+        <div class="card-desc">The "AWS API Gateway" of Bittensor. Developers query Cortex.t and get back responses from the best miners across all subnets. Single API key, access to the whole Bittensor ecosystem.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> This is the monetization layer. If developers pay TAO to use Cortex.t, it creates real economic demand for the token.</div>
+        <span class="card-tag" style="background:rgba(0,184,148,0.2);color:var(--success)">Developer API</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">SN13 — Dataverse</div>
+        <div class="card-desc">Miners scrape, clean, and curate datasets from the web. This feeds directly into pretraining (SN9) and other subnets. Data is the oil of AI — Dataverse is the refinery.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> High-quality data is the biggest bottleneck in AI. Decentralized data collection at scale could be transformative.</div>
+        <span class="card-tag" style="background:rgba(52,152,219,0.2);color:#74b9ff">Data Pipeline</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO PARTICIPATE -->
+<div style="background:rgba(108,92,231,0.05);border-top:1px solid rgba(108,92,231,0.15);border-bottom:1px solid rgba(108,92,231,0.15);padding:80px 40px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-title" style="text-align:center;margin-bottom:8px">How to Participate in Bittensor</div>
+    <p style="text-align:center;color:var(--muted);margin-bottom:48px">Three ways to earn TAO</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+      <div class="card" style="border-color:rgba(108,92,231,0.3)">
+        <div style="font-size:32px;margin-bottom:12px">🔬</div>
+        <div class="card-title">Mine (Run AI Models)</div>
+        <div class="card-desc">Run AI models on a subnet and compete for emissions based on output quality. Requires: GPU (RTX 4090 min), Python/ML skills, subnet registration fee (burned TAO).<br><br><strong style="color:white">Risk:</strong> High. Bottom 50% earners get deregistered.</div>
+        <div style="margin-top:12px;font-size:12px;padding:8px 12px;background:rgba(231,76,60,0.1);border-radius:8px;color:#ff7675">⚠️ Technical + Capital intensive</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(0,184,148,0.3)">
+        <div style="font-size:32px;margin-bottom:12px">✅</div>
+        <div class="card-title">Validate</div>
+        <div class="card-desc">Run a validator node that scores miner outputs and earns a percentage of subnet emissions. Requires: 1,000+ TAO stake, server infrastructure, technical knowledge.<br><br><strong style="color:white">Reward:</strong> 18-41% of emissions depending on subnet.</div>
+        <div style="margin-top:12px;font-size:12px;padding:8px 12px;background:rgba(0,184,148,0.1);border-radius:8px;color:var(--success)">✅ Significant capital required</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(162,155,254,0.3)">
+        <div style="font-size:32px;margin-bottom:12px">🏦</div>
+        <div class="card-title">Delegate / Stake</div>
+        <div class="card-desc">Delegate your TAO to a trusted validator on taostats.io and earn a share of their rewards passively. No technical setup required, no minimum (though more = more rewards).<br><br><strong style="color:white">Yield:</strong> ~15-20% APY estimated.</div>
+        <div style="margin-top:12px;font-size:12px;padding:8px 12px;background:rgba(162,155,254,0.1);border-radius:8px;color:var(--tao-light)">🟣 Easiest option for investors</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom:12px">
+    <a href="/">Home</a> · 
+    <a href="btc.html">BTC</a> · 
+    <a href="tao.html">TAO</a> · 
+    <a href="https://taostats.io" target="_blank">TaoStats.io</a> · 
+    <a href="https://x.com/chainplexio" target="_blank">@chainplexio</a>
+  </div>
+  © 2026 ChainPlex.io · Not financial advice · Data from public APIs & community research
+</footer>
+
+<script>
+// TAO price
+async function loadTaoPrice() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bittensor&vs_currencies=usd&include_24hr_change=true&include_market_cap=true');
+    const d = await res.json();
+    const tao = d.bittensor;
+    const price = '$' + tao.usd.toLocaleString('en-US', {maximumFractionDigits: 2});
+    const mcap = '$' + (tao.usd_market_cap / 1e9).toFixed(2) + 'B';
+    const chg = tao.usd_24h_change;
+
+    document.getElementById('tao-price').textContent = price;
+    document.getElementById('tao-price').className = 'stat-value ' + (chg >= 0 ? 'up' : 'down');
+    document.getElementById('tao-mcap').textContent = mcap;
+    document.getElementById('tao-mcap').className = 'stat-value';
+    document.getElementById('taoPrice').textContent = price;
+  } catch(e) { console.error(e); }
+}
+
+// TAO price chart from Kraken
+async function loadTaoChart() {
+  try {
+    const res = await fetch('https://api.kraken.com/0/public/OHLC?pair=TAOUSD&interval=1440&since=1');
+    const data = await res.json();
+
+    if (data.error && data.error.length > 0) throw new Error(data.error[0]);
+
+    const pair = Object.keys(data.result).find(k => k !== 'last');
+    const candles = data.result[pair].slice(0, -1);
+
+    const dates = candles.map(c => new Date(c[0] * 1000).toISOString().split('T')[0]);
+    const prices = candles.map(c => parseFloat(c[4]));
+
+    const trace = {
+      x: dates, y: prices,
+      type: 'scatter', mode: 'lines',
+      name: 'TAO Price',
+      line: { color: '#6c5ce7', width: 2 },
+      fill: 'tozeroy',
+      fillcolor: 'rgba(108,92,231,0.1)',
+    };
+
+    const layout = {
+      plot_bgcolor: 'transparent',
+      paper_bgcolor: 'transparent',
+      yaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a', tickprefix: '$' },
+      xaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a' },
+      margin: { t: 10, r: 10, b: 40, l: 70 },
+      font: { family: 'Raleway', color: '#7b7b9a' },
+      hovermode: 'x unified',
+    };
+
+    Plotly.newPlot('taoChart', [trace], layout, { responsive: true, displayModeBar: false });
+  } catch(e) {
+    document.getElementById('taoChart').innerHTML = '<div style="padding:20px;color:var(--muted)">TAO chart unavailable (pair may not be on Kraken) — check CoinGecko for live prices.</div>';
+  }
+}
+
+// Supply schedule chart
+function buildSupplyChart() {
+  const years = Array.from({length: 20}, (_, i) => 2022 + i);
+  // Approximate circulating supply over time with halvings
+  const supply = [8.5, 9.1, 9.6, 10.2, 10.6, 11.0, 11.3, 11.6, 11.9, 12.1, 12.4, 12.6, 12.8, 13.0, 13.2, 13.4, 13.6, 13.7, 13.9, 14.0];
+
+  Plotly.newPlot('supplyChart', [{
+    x: years, y: supply,
+    type: 'scatter', mode: 'lines+markers',
+    name: 'Circulating Supply (M)',
+    line: { color: '#a29bfe', width: 2 },
+    fill: 'tozeroy', fillcolor: 'rgba(162,155,254,0.1)',
+  }], {
+    plot_bgcolor: 'transparent', paper_bgcolor: 'transparent',
+    yaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a', ticksuffix: 'M' },
+    xaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a' },
+    margin: { t: 10, r: 10, b: 40, l: 60 },
+    font: { family: 'Raleway', color: '#7b7b9a' },
+    showlegend: false,
+  }, { responsive: true, displayModeBar: false });
+}
+
+// Emission rate chart
+function buildEmissionChart() {
+  const years = ['2022', '2023', '2024', '2025', '2026', '2028', '2030', '2032', '2034'];
+  const emissions = [14400, 14400, 7200, 7200, 7200, 3600, 3600, 1800, 1800];
+
+  Plotly.newPlot('emissionChart', [{
+    x: years, y: emissions,
+    type: 'bar',
+    name: 'Daily TAO Emission',
+    marker: { color: 'rgba(108,92,231,0.7)', line: { color: 'rgba(108,92,231,1)', width: 1 } },
+  }], {
+    plot_bgcolor: 'transparent', paper_bgcolor: 'transparent',
+    yaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a', ticksuffix: ' TAO' },
+    xaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a' },
+    margin: { t: 10, r: 10, b: 40, l: 70 },
+    font: { family: 'Raleway', color: '#7b7b9a' },
+    showlegend: false,
+  }, { responsive: true, displayModeBar: false });
+}
+
+function setTaoRange(range) {
+  const now = new Date();
+  let start = range === '1y' ? new Date(now.getFullYear()-1, now.getMonth(), now.getDate()) : new Date('2023-01-01');
+  Plotly.relayout('taoChart', { 'xaxis.range': [start.toISOString().split('T')[0], now.toISOString().split('T')[0]] });
+}
+
+loadTaoPrice();
+loadTaoChart();
+buildSupplyChart();
+buildEmissionChart();
+</script>
+</body>
+</html>
