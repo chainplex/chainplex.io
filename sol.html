@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solana Ecosystem Analytics | ChainPlex</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    :root {
+      --sol: #9945ff;
+      --sol-light: #c0a3ff;
+      --sol-green: #14f195;
+    }
+
+    .hero {
+      background: radial-gradient(ellipse at top, rgba(153,69,255,0.18) 0%, transparent 60%);
+    }
+
+    .hero::before {
+      background: radial-gradient(circle, rgba(20,241,149,0.04) 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      background: rgba(153,69,255,0.2);
+      border-color: rgba(153,69,255,0.45);
+      color: var(--sol-light);
+    }
+
+    .hero h1 .sol-color { color: var(--sol-light); }
+    .hero h1 .sol-green { color: var(--sol-green); }
+
+    .card:hover { border-color: rgba(153,69,255,0.35); }
+
+    .sol-tag {
+      display: inline-block;
+      background: rgba(153,69,255,0.2);
+      color: var(--sol-light);
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .metric-card:hover {
+      border-color: rgba(153,69,255,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .metric-icon { font-size: 32px; margin-bottom: 14px; }
+    .metric-value { font-size: 34px; font-weight: 800; color: var(--sol-green); margin-bottom: 6px; letter-spacing: -1px; }
+    .metric-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .metric-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    /* Ecosystem protocol cards */
+    .protocol-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .protocol-card:hover {
+      border-color: rgba(153,69,255,0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .protocol-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .protocol-logo {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .protocol-name { font-size: 16px; font-weight: 700; }
+    .protocol-ticker {
+      font-size: 11px;
+      color: var(--sol-light);
+      font-weight: 600;
+      background: rgba(153,69,255,0.15);
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .protocol-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+
+    .protocol-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .protocol-stat-item { text-align: left; }
+    .protocol-stat-val { font-size: 14px; font-weight: 700; color: white; }
+    .protocol-stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; }
+
+    .protocol-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+
+    .tag-dex { background: rgba(20,241,149,0.15); color: var(--sol-green); }
+    .tag-staking { background: rgba(153,69,255,0.15); color: var(--sol-light); }
+    .tag-perps { background: rgba(247,147,26,0.15); color: var(--primary); }
+    .tag-lending { background: rgba(52,152,219,0.15); color: #74b9ff; }
+    .tag-nft { background: rgba(231,76,60,0.15); color: var(--danger); }
+    .tag-depin { background: rgba(0,184,148,0.15); color: var(--success); }
+    .tag-mev { background: rgba(255,189,0,0.15); color: #ffd166; }
+
+    /* Why Solana comparison table */
+    .comparison-table {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .comparison-header {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      padding: 14px 24px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .comparison-row:last-child { border-bottom: none; }
+    .comparison-row:hover { background: rgba(255,255,255,0.02); }
+    .comparison-metric { color: var(--muted); font-size: 13px; }
+    .comparison-sol { color: var(--sol-green); font-weight: 700; }
+    .comparison-eth { color: #c0c0c0; font-weight: 600; }
+
+    .win-badge {
+      display: inline-block;
+      background: rgba(20,241,149,0.15);
+      color: var(--sol-green);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+
+    /* Why Solana cards */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .why-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .why-icon { font-size: 30px; margin-bottom: 12px; }
+    .why-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .why-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .sol-nav-badge {
+      background: var(--sol) !important;
+    }
+
+    @media (max-width: 768px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .comparison-header, .comparison-row { grid-template-columns: 1.2fr 1fr 1fr; padding: 12px 16px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Chain<span>Plex</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="btc.html">BTC Charts</a>
+    <a href="tao.html">TAO / Bittensor</a>
+    <a href="hype.html">HYPE</a>
+    <a href="sol.html" class="active">Solana</a>
+    <span id="solPrice" class="nav-badge sol-nav-badge">Loading...</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">◎ High-Performance L1</div>
+  <h1>Solana <span class="sol-color">(SOL)</span><br>Ecosystem <span class="sol-green">Analytics</span></h1>
+  <p>Speed, scale, and a thriving DeFi ecosystem. Track live Solana metrics, key protocols, and on-chain data.</p>
+  <div class="hero-buttons">
+    <a href="#ecosystem" class="btn-primary" style="background:var(--sol)">Explore Ecosystem</a>
+    <a href="#chart" class="btn-secondary">SOL Price Chart</a>
+    <a href="#why-sol" class="btn-secondary">Why Solana?</a>
+  </div>
+</section>
+
+<!-- LIVE STATS BAR -->
+<div class="stats-bar" id="solStats">
+  <div class="stat-item">
+    <div class="stat-value" id="stat-sol-price">—</div>
+    <div class="stat-label">SOL Price</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="stat-sol-change">—</div>
+    <div class="stat-label">24h Change</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="stat-sol-mcap">—</div>
+    <div class="stat-label">Market Cap</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" style="color:var(--sol-green)">~7.0%</div>
+    <div class="stat-label">Staking Yield (APY)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" style="color:var(--sol-light)">~1,400</div>
+    <div class="stat-label">Active Validators</div>
+  </div>
+</div>
+
+<!-- KEY METRICS -->
+<div class="section" id="metrics">
+  <div class="section-title">⚡ Key Network Metrics</div>
+  <p class="section-desc">Live on-chain data from the Solana mainnet RPC</p>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-value" id="metric-tps">—</div>
+      <div class="metric-label">Transactions Per Second</div>
+      <div class="metric-sub" id="metric-tps-sub">Fetching from mainnet RPC…</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">🔒</div>
+      <div class="metric-value">~388M</div>
+      <div class="metric-label">Total Staked SOL</div>
+      <div class="metric-sub">≈ 65% of circulating supply staked</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">🌊</div>
+      <div class="metric-value">~$6.5B</div>
+      <div class="metric-label">DeFi TVL</div>
+      <div class="metric-sub">Approximate — see DeFiLlama for live data</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">🏦</div>
+      <div class="metric-value">595M</div>
+      <div class="metric-label">Circulating Supply</div>
+      <div class="metric-sub">Total supply: ~595M SOL</div>
+    </div>
+  </div>
+</div>
+
+<!-- ECOSYSTEM MAP -->
+<div style="background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 40px;" id="ecosystem">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-title">🗺 Solana Ecosystem Map</div>
+    <p class="section-desc">Key protocols powering the Solana DeFi, trading, staking, and web3 economy</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
+
+      <!-- Jupiter -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(20,241,149,0.1)">🪐</div>
+          <div>
+            <div class="protocol-name">Jupiter</div>
+            <span class="protocol-ticker">JUP</span>
+          </div>
+        </div>
+        <div class="protocol-desc">The largest DEX aggregator on Solana. Routes trades across all major AMMs to find the best price. Also offers limit orders, DCA, and the Jupiter Token (JUP) governance.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">$1B+</div>
+            <div class="protocol-stat-lbl">Daily Volume</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">#1</div>
+            <div class="protocol-stat-lbl">DEX Aggregator</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-dex">DEX Aggregator</span>
+      </div>
+
+      <!-- Raydium -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(153,69,255,0.1)">⚡</div>
+          <div>
+            <div class="protocol-name">Raydium</div>
+            <span class="protocol-ticker">RAY</span>
+          </div>
+        </div>
+        <div class="protocol-desc">Leading AMM and liquidity protocol on Solana. Powers concentrated liquidity pools, yield farming, and the LaunchLab token launch platform. Deeply integrated with OpenBook orderbook.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">$500M+</div>
+            <div class="protocol-stat-lbl">TVL</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">CLMM</div>
+            <div class="protocol-stat-lbl">Pool Type</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-dex">AMM / DEX</span>
+      </div>
+
+      <!-- Marinade Finance -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(20,241,149,0.1)">🌊</div>
+          <div>
+            <div class="protocol-name">Marinade Finance</div>
+            <span class="protocol-ticker">MNDE · mSOL</span>
+          </div>
+        </div>
+        <div class="protocol-desc">The largest liquid staking protocol on Solana. Stake SOL and receive mSOL — a yield-bearing token usable across DeFi while your stake earns ~7% APY. Delegates to 450+ validators.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">~$1.5B</div>
+            <div class="protocol-stat-lbl">TVL</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">450+</div>
+            <div class="protocol-stat-lbl">Validators</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-staking">Liquid Staking</span>
+      </div>
+
+      <!-- Jito -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(255,189,0,0.1)">🎯</div>
+          <div>
+            <div class="protocol-name">Jito</div>
+            <span class="protocol-ticker">JTO · jitoSOL</span>
+          </div>
+        </div>
+        <div class="protocol-desc">MEV-optimized liquid staking and block engine for Solana. jitoSOL captures MEV rewards on top of standard staking yield. Jito's block engine powers most of Solana's block production.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">~$2B</div>
+            <div class="protocol-stat-lbl">TVL</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">MEV+</div>
+            <div class="protocol-stat-lbl">Yield Type</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-staking">Liquid Staking</span>
+        <span class="protocol-tag tag-mev" style="margin-left:4px">MEV</span>
+      </div>
+
+      <!-- Drift Protocol -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(247,147,26,0.1)">📈</div>
+          <div>
+            <div class="protocol-name">Drift Protocol</div>
+            <span class="protocol-ticker">DRIFT</span>
+          </div>
+        </div>
+        <div class="protocol-desc">The largest perpetuals DEX on Solana. Offers cross-margined perpetual futures, spot margin trading, and borrow/lend. Built with a virtual AMM (vAMM) for deep liquidity.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">$400M+</div>
+            <div class="protocol-stat-lbl">Open Interest</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">50+</div>
+            <div class="protocol-stat-lbl">Perp Markets</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-perps">Perps Trading</span>
+      </div>
+
+      <!-- Kamino Finance -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(52,152,219,0.1)">🏦</div>
+          <div>
+            <div class="protocol-name">Kamino Finance</div>
+            <span class="protocol-ticker">KMNO</span>
+          </div>
+        </div>
+        <div class="protocol-desc">Leading lending and leverage protocol on Solana. Offers automated CLMM liquidity strategies, leveraged yield farming, and one of the largest money markets on the network.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">$1B+</div>
+            <div class="protocol-stat-lbl">TVL</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">Multi</div>
+            <div class="protocol-stat-lbl">Strategies</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-lending">Lending / Leverage</span>
+      </div>
+
+      <!-- Tensor -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(231,76,60,0.1)">🖼</div>
+          <div>
+            <div class="protocol-name">Tensor</div>
+            <span class="protocol-ticker">TNSR</span>
+          </div>
+        </div>
+        <div class="protocol-desc">The leading NFT marketplace on Solana with pro-trader tools. Features fast collection sweeps, rarity filters, real-time floor tracking, and the TNSR governance token with marketplace fee sharing.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">#1</div>
+            <div class="protocol-stat-lbl">NFT Volume</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">Pro</div>
+            <div class="protocol-stat-lbl">Trader Focus</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-nft">NFT Marketplace</span>
+      </div>
+
+      <!-- Helium -->
+      <div class="protocol-card">
+        <div class="protocol-header">
+          <div class="protocol-logo" style="background:rgba(0,184,148,0.1)">📡</div>
+          <div>
+            <div class="protocol-name">Helium</div>
+            <span class="protocol-ticker">HNT · MOBILE · IOT</span>
+          </div>
+        </div>
+        <div class="protocol-desc">The world's largest decentralized wireless network, migrated to Solana in 2023. Hotspot operators earn HNT by providing LoRaWAN (IoT) and 5G (MOBILE) coverage across 180+ countries.</div>
+        <div class="protocol-stats">
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">1M+</div>
+            <div class="protocol-stat-lbl">Hotspots</div>
+          </div>
+          <div class="protocol-stat-item">
+            <div class="protocol-stat-val">180+</div>
+            <div class="protocol-stat-lbl">Countries</div>
+          </div>
+        </div>
+        <span class="protocol-tag tag-depin">DePIN</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SOL PRICE CHART -->
+<div class="section" id="chart">
+  <div class="section-title">📈 SOL / USD — 2 Year Price Chart</div>
+  <p class="section-desc">Historical SOL price data from Kraken (SOLUSD pair)</p>
+
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">SOL Price (USD) — 2Y</div>
+        <div class="chart-card-desc" id="chartStatus">Loading chart data from Kraken…</div>
+      </div>
+      <div id="solPriceDisplay" style="font-size:24px;font-weight:800;color:var(--sol-green)">—</div>
+    </div>
+    <div id="solChart" style="width:100%;height:480px;"></div>
+  </div>
+</div>
+
+<!-- WHY SOLANA -->
+<div style="background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 40px;" id="why-sol">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-title">🚀 Why Solana?</div>
+    <p class="section-desc">The case for Solana as the leading high-performance smart contract platform</p>
+
+    <div class="why-grid" style="margin-bottom:48px">
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <div class="why-title">Unmatched Speed</div>
+        <div class="why-desc">Solana achieves 2,000–5,000+ real TPS in production, with a theoretical max of 65,000 TPS. Block times of ~400ms make it the fastest L1 for consumer applications.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💸</div>
+        <div class="why-title">Near-Zero Fees</div>
+        <div class="why-desc">Average transaction fees of $0.0001–$0.001. Priority fees during congestion remain under $0.01 for most transactions — enabling micropayments and high-frequency trading at scale.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🌱</div>
+        <div class="why-title">Ecosystem Growth</div>
+        <div class="why-desc">Over $6B+ in DeFi TVL, 100M+ wallets created, and category-leading apps in DEX (Jupiter), liquid staking (Jito/Marinade), perps (Drift), and DePIN (Helium).</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔧</div>
+        <div class="why-title">Developer Momentum</div>
+        <div class="why-desc">Solana has the fastest-growing developer ecosystem after Ethereum. The Anchor framework, compressed NFTs, and state compression unlock new app categories impossible on other chains.</div>
+      </div>
+    </div>
+
+    <!-- SOL vs ETH comparison -->
+    <div class="section-title" style="font-size:22px;margin-bottom:20px">SOL vs ETH — By the Numbers</div>
+    <div class="comparison-table">
+      <div class="comparison-header">
+        <div>Metric</div>
+        <div style="color:var(--sol-light)">◎ Solana</div>
+        <div style="color:#c0c0c0">Ξ Ethereum</div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">Avg. Transaction Fee</div>
+        <div class="comparison-sol">~$0.0005 <span class="win-badge">winner</span></div>
+        <div class="comparison-eth">$0.50–$5+</div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">Block Time</div>
+        <div class="comparison-sol">~400 ms <span class="win-badge">winner</span></div>
+        <div class="comparison-eth">~12 seconds</div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">Throughput (TPS)</div>
+        <div class="comparison-sol">2,000–5,000+ <span class="win-badge">winner</span></div>
+        <div class="comparison-eth">15–30 TPS (L1)</div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">Staking Yield (APY)</div>
+        <div class="comparison-sol">~7.0%</div>
+        <div class="comparison-eth">~3.5% <span style="font-size:9px;color:var(--muted);margin-left:4px">(ETH winner on security)</span></div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">DeFi TVL</div>
+        <div class="comparison-sol">~$6.5B</div>
+        <div class="comparison-eth">~$60B+ <span style="font-size:9px;color:var(--muted);margin-left:4px">(ETH winner on TVL)</span></div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">Validator Count</div>
+        <div class="comparison-sol">~1,400</div>
+        <div class="comparison-eth">~1,000,000+ <span style="font-size:9px;color:var(--muted);margin-left:4px">(ETH winner on decentralization)</span></div>
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-metric">Consensus Mechanism</div>
+        <div class="comparison-sol">PoH + PoS</div>
+        <div class="comparison-eth">PoS (Casper)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom:12px">
+    <a href="/">Home</a> ·
+    <a href="btc.html">BTC</a> ·
+    <a href="tao.html">TAO</a> ·
+    <a href="hype.html">HYPE</a> ·
+    <a href="sol.html">SOL</a> ·
+    <a href="https://x.com/chainplexio" target="_blank">@chainplexio</a>
+  </div>
+  © 2026 ChainPlex.io · Not financial advice · Data from CoinGecko, Kraken & Solana RPC
+</footer>
+
+<script>
+// ── CoinGecko: SOL price ──────────────────────────────────────────────────────
+async function loadSolPrice() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true&include_market_cap=true');
+    const d = await res.json();
+    const sol = d.solana;
+    if (!sol) return;
+
+    const price = sol.usd;
+    const change = sol.usd_24h_change;
+    const mcap = sol.usd_market_cap;
+
+    const fmt = (v) => '$' + v.toLocaleString('en-US', { maximumFractionDigits: v > 100 ? 0 : 2 });
+    const fmtB = (v) => '$' + (v / 1e9).toFixed(1) + 'B';
+
+    document.getElementById('stat-sol-price').textContent = fmt(price);
+    document.getElementById('stat-sol-price').className = 'stat-value';
+
+    const chgEl = document.getElementById('stat-sol-change');
+    chgEl.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+    chgEl.className = 'stat-value ' + (change >= 0 ? 'up' : 'down');
+
+    document.getElementById('stat-sol-mcap').textContent = fmtB(mcap);
+
+    document.getElementById('solPrice').textContent = fmt(price);
+    document.getElementById('solPriceDisplay').textContent = fmt(price);
+  } catch(e) {
+    console.error('CoinGecko fetch failed', e);
+  }
+}
+
+// ── Solana RPC: TPS via getRecentPerformanceSamples ──────────────────────────
+async function loadTPS() {
+  try {
+    const res = await fetch('https://api.mainnet-beta.solana.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getRecentPerformanceSamples',
+        params: [5]
+      })
+    });
+    const json = await res.json();
+    const samples = json.result;
+    if (!samples || samples.length === 0) return;
+
+    // Average TPS across returned samples (numTransactions / samplePeriodSecs)
+    const avgTps = samples.reduce((acc, s) => {
+      return acc + (s.numTransactions / s.samplePeriodSecs);
+    }, 0) / samples.length;
+
+    const tpsEl = document.getElementById('metric-tps');
+    const tpsSub = document.getElementById('metric-tps-sub');
+    tpsEl.textContent = Math.round(avgTps).toLocaleString();
+    tpsSub.textContent = 'Avg of last 5 slots from mainnet RPC';
+  } catch(e) {
+    document.getElementById('metric-tps-sub').textContent = 'RPC unavailable — est. 2,000–5,000 TPS';
+    document.getElementById('metric-tps').textContent = '~3,000';
+    console.error('Solana RPC TPS fetch failed', e);
+  }
+}
+
+// ── Kraken: SOL/USD 2Y chart ──────────────────────────────────────────────────
+async function loadSolChart() {
+  const statusEl = document.getElementById('chartStatus');
+  try {
+    // Kraken OHLC endpoint: interval=1440 (daily), last 730 days
+    const since = Math.floor(Date.now() / 1000) - (730 * 86400);
+    const url = `https://api.kraken.com/0/public/OHLC?pair=SOLUSD&interval=1440&since=${since}`;
+    const res = await fetch(url);
+    const json = await res.json();
+
+    if (json.error && json.error.length > 0) {
+      throw new Error(json.error[0]);
+    }
+
+    // Kraken returns data under the pair key (may vary: SOLUSD or XSOLUSD etc)
+    const pairKey = Object.keys(json.result).find(k => k !== 'last');
+    const candles = json.result[pairKey]; // [time, open, high, low, close, vwap, volume, count]
+
+    const times = candles.map(c => new Date(c[0] * 1000).toISOString().slice(0, 10));
+    const closes = candles.map(c => parseFloat(c[4]));
+    const opens = candles.map(c => parseFloat(c[1]));
+    const highs = candles.map(c => parseFloat(c[2]));
+    const lows = candles.map(c => parseFloat(c[3]));
+    const volumes = candles.map(c => parseFloat(c[6]));
+
+    // Color area under curve
+    const gradientColor = 'rgba(153,69,255,0.15)';
+    const lineColor = '#9945ff';
+
+    const tracePrice = {
+      x: times,
+      y: closes,
+      type: 'scatter',
+      mode: 'lines',
+      name: 'SOL Price',
+      line: { color: lineColor, width: 2 },
+      fill: 'tozeroy',
+      fillcolor: gradientColor,
+      hovertemplate: '<b>%{x}</b><br>$%{y:,.2f}<extra></extra>'
+    };
+
+    const traceVolume = {
+      x: times,
+      y: volumes,
+      type: 'bar',
+      name: 'Volume',
+      yaxis: 'y2',
+      marker: { color: 'rgba(20,241,149,0.25)' },
+      hovertemplate: '%{y:,.0f} SOL<extra></extra>'
+    };
+
+    const layout = {
+      paper_bgcolor: 'transparent',
+      plot_bgcolor: 'transparent',
+      font: { family: 'Raleway, sans-serif', color: '#7b7b9a' },
+      margin: { t: 10, r: 40, b: 40, l: 70 },
+      xaxis: {
+        gridcolor: 'rgba(255,255,255,0.05)',
+        linecolor: 'rgba(255,255,255,0.07)',
+        tickfont: { size: 11 },
+        rangeslider: { visible: false }
+      },
+      yaxis: {
+        title: 'Price (USD)',
+        gridcolor: 'rgba(255,255,255,0.05)',
+        linecolor: 'rgba(255,255,255,0.07)',
+        tickfont: { size: 11 },
+        tickprefix: '$',
+        domain: [0.22, 1]
+      },
+      yaxis2: {
+        title: 'Volume',
+        gridcolor: 'transparent',
+        tickfont: { size: 10 },
+        domain: [0, 0.18],
+        showgrid: false
+      },
+      legend: {
+        orientation: 'h',
+        x: 0, y: 1.05,
+        font: { size: 12 },
+        bgcolor: 'transparent'
+      },
+      hovermode: 'x unified',
+      hoverlabel: {
+        bgcolor: '#12122a',
+        bordercolor: 'rgba(153,69,255,0.5)',
+        font: { color: '#e8e8f0', size: 12 }
+      }
+    };
+
+    Plotly.newPlot('solChart', [tracePrice, traceVolume], layout, {
+      responsive: true,
+      displayModeBar: false
+    });
+
+    statusEl.textContent = `${candles.length} daily candles from Kraken (SOLUSD)`;
+  } catch(e) {
+    statusEl.textContent = 'Chart data unavailable — please try again later';
+    console.error('Kraken chart fetch failed', e);
+    // Render empty state
+    Plotly.newPlot('solChart', [], {
+      paper_bgcolor: 'transparent',
+      plot_bgcolor: 'transparent',
+      annotations: [{
+        text: 'Chart data temporarily unavailable',
+        xref: 'paper', yref: 'paper',
+        x: 0.5, y: 0.5,
+        showarrow: false,
+        font: { color: '#7b7b9a', size: 16 }
+      }]
+    }, { responsive: true, displayModeBar: false });
+  }
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+loadSolPrice();
+loadTPS();
+loadSolChart();
+setInterval(loadSolPrice, 60000);
+setInterval(loadTPS, 30000);
+</script>
+
+</body>
+</html>
