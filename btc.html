@@ -118,22 +118,21 @@
       font-weight: 600;
     }
   </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="header">
-  <div>
-    <div class="logo">Chain<span>Plex</span>.io</div>
-    <div class="subtitle">On-Chain Crypto Analytics</div>
+<nav>
+  <a href="/" class="nav-logo">Chain<span>Plex</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="btc.html" class="active">BTC Charts</a>
+    <a href="tao.html">TAO / Bittensor</a>
+    <a href="sol.html">SOL</a>
+    <a href="hype.html">HYPE</a>
+    <span id="currentPrice" class="nav-badge">Loading...</span>
   </div>
-  <div style="display:flex;gap:12px;align-items:center">
-    <a href="/" style="font-size:13px;color:#6c757d;text-decoration:none;font-weight:500;">Home</a>
-    <a href="tao.html" style="font-size:13px;color:#6c757d;text-decoration:none;font-weight:500;">TAO</a>
-    <a href="hype.html" style="font-size:13px;color:#6c757d;text-decoration:none;font-weight:500;">HYPE</a>
-    <a href="sol.html" style="font-size:13px;color:#6c757d;text-decoration:none;font-weight:500;">SOL</a>
-    <div id="currentPrice" class="price-badge">Loading...</div>
-  </div>
-</div>
+</nav>
 
 <div class="chart-container">
   <div class="chart-title">BTC: On-Chain Pricing Models</div>
@@ -160,9 +159,12 @@
   </div>
 </div>
 
-<div class="footer">
-  Data: CoinGecko API · Updated daily · Not financial advice
-</div>
+<footer>
+  <div style="margin-bottom:12px">
+    <a href="/">Home</a> · <a href="btc.html">BTC</a> · <a href="tao.html">TAO</a> · <a href="sol.html">SOL</a> · <a href="hype.html">HYPE</a> · <a href="https://x.com/chainplexio" target="_blank">@chainplexio</a>
+  </div>
+  © 2026 ChainPlex.io · Not financial advice · Data from public APIs
+</footer>
 
 <script>
 let allDates = [];
@@ -295,6 +297,7 @@ function getLayout(dateRange) {
       x: 0,
       font: { family: 'Raleway', size: 11 },
     },
+    height: 600,
     margin: { t: 20, r: 20, b: 80, l: 70 },
     hovermode: 'x unified',
     font: { family: 'Raleway' },
