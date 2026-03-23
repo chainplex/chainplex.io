@@ -237,8 +237,7 @@
         <button onclick="setTaoRange('all')" class="btn" style="padding:4px 12px;font-size:12px;background:var(--tao);border:none;color:white;border-radius:6px;cursor:pointer">All</button>
       </div>
     </div>
-    <p id="taoChart-msg" style="text-align:center;padding:140px 0;color:var(--muted)">Loading TAO data...</p>
-    <div id="taoChart" style="width:100%;height:350px;"></div>
+    <div id="taoChart" style="width:100%;height:350px;min-height:350px;max-height:350px;"></div>
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
@@ -926,6 +925,7 @@ async function loadTaoChart() {
     };
 
     const layout = {
+      height: 350,
       plot_bgcolor: 'transparent',
       paper_bgcolor: 'transparent',
       yaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a', tickprefix: '$', rangemode: 'tozero' },
@@ -940,8 +940,6 @@ async function loadTaoChart() {
       hovermode: 'x unified',
     };
 
-    const msgEl = document.getElementById('taoChart-msg');
-    if (msgEl) msgEl.style.display = 'none';
     Plotly.newPlot('taoChart', [trace], layout, { responsive: true, displayModeBar: false });
   } catch(e) {
     document.getElementById('taoChart').innerHTML = '<div style="padding:20px;color:var(--muted)">TAO chart unavailable — check CoinGecko for live prices.</div>';
