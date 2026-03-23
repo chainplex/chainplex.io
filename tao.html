@@ -230,7 +230,7 @@
     <div class="chart-card-header">
       <div>
         <div class="chart-card-title">TAO Price (2Y)</div>
-        <div class="chart-card-desc">Bittensor price from Kraken — 2 year daily candles</div>
+        <div class="chart-card-desc">Bittensor price from Kraken — daily candles since July 2024 listing</div>
       </div>
       <div style="display:flex;gap:8px">
         <button onclick="setTaoRange('1y')" class="btn" style="padding:4px 12px;font-size:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:white;border-radius:6px;cursor:pointer">1Y</button>
@@ -927,8 +927,13 @@ async function loadTaoChart() {
     const layout = {
       plot_bgcolor: 'transparent',
       paper_bgcolor: 'transparent',
-      yaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a', tickprefix: '$' },
-      xaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a' },
+      yaxis: { gridcolor: 'rgba(255,255,255,0.05)', color: '#7b7b9a', tickprefix: '$', rangemode: 'tozero' },
+      xaxis: { 
+        gridcolor: 'rgba(255,255,255,0.05)', 
+        color: '#7b7b9a',
+        range: [dates[0], dates[dates.length - 1]],
+        type: 'date'
+      },
       margin: { t: 10, r: 10, b: 40, l: 70 },
       font: { family: 'Raleway', color: '#7b7b9a' },
       hovermode: 'x unified',
