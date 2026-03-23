@@ -237,7 +237,8 @@
         <button onclick="setTaoRange('all')" class="btn" style="padding:4px 12px;font-size:12px;background:var(--tao);border:none;color:white;border-radius:6px;cursor:pointer">All</button>
       </div>
     </div>
-    <div id="taoChart" style="height:350px;display:flex;align-items:center;justify-content:center;color:var(--muted)">Loading TAO data...</div>
+    <div id="taoChart-loading" style="height:350px;display:flex;align-items:center;justify-content:center;color:var(--muted)">Loading TAO data...</div>
+    <div id="taoChart" style="width:100%;height:350px;"></div>
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
@@ -939,9 +940,11 @@ async function loadTaoChart() {
       hovermode: 'x unified',
     };
 
+    document.getElementById('taoChart-loading').style.display = 'none';
     Plotly.newPlot('taoChart', [trace], layout, { responsive: true, displayModeBar: false });
   } catch(e) {
-    document.getElementById('taoChart').innerHTML = '<div style="padding:20px;color:var(--muted)">TAO chart unavailable (pair may not be on Kraken) — check CoinGecko for live prices.</div>';
+    document.getElementById('taoChart-loading').style.display = 'none';
+    document.getElementById('taoChart').innerHTML = '<div style="padding:20px;color:var(--muted)">TAO chart unavailable — check CoinGecko for live prices.</div>';
   }
 }
 
