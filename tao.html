@@ -27,6 +27,7 @@
   <p>The most comprehensive Bittensor subnet analytics. Understand the decentralized AI economy powering the future of machine intelligence.</p>
   <div class="hero-buttons">
     <a href="#subnets" class="btn-primary" style="background:var(--tao)">Explore Subnets</a>
+    <a href="#distribution" class="btn-secondary">Token Distribution</a>
     <a href="#tokenomics" class="btn-secondary">TAO Tokenomics</a>
   </div>
 </section>
@@ -81,6 +82,138 @@
       <div class="subnet-stat">
         <div class="subnet-stat-value">15-20%</div>
         <div class="subnet-stat-label">Staking APY (est.)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOKEN DISTRIBUTION -->
+<div class="section" style="padding-top:0" id="distribution">
+  <div class="section-title">🪙 TAO Token Distribution</div>
+  <p class="section-desc">No VC presale. No investor allocations. All 21M TAO earned through mining — just like Bitcoin.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px">
+    <!-- Left: distribution overview -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Supply Allocation Model</div>
+          <div class="chart-card-desc">Estimated breakdown — no official token schedule</div>
+        </div>
+      </div>
+      <div id="distChart" style="height:280px"></div>
+    </div>
+
+    <!-- Right: key facts -->
+    <div class="chart-card" style="display:flex;flex-direction:column;gap:16px;justify-content:center;padding:28px">
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:6px">🚫 No VC Presale</div>
+        <div style="color:var(--text-muted);font-size:14px;line-height:1.6">Unlike 99% of crypto projects, Bittensor raised <strong style="color:white">zero VC money</strong>. No seed round, no Series A, no cliff+vest. Every TAO in existence was mined by network participants.</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:6px">🏛️ Opentensor Foundation</div>
+        <div style="color:var(--text-muted);font-size:14px;line-height:1.6">The foundation (OTF) accumulated TAO by running validators and mining during the early network when competition was low. Estimated <strong style="color:white">600k–1M+ TAO</strong> held across foundation wallets (~6–10% of max supply).</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:6px">👥 Founders & Early Miners</div>
+        <div style="color:var(--text-muted);font-size:14px;line-height:1.6">Co-founders <strong style="color:white">Jacob Steeves</strong> and <strong style="color:white">Ala Shaabana</strong> mined TAO from genesis. Community estimates suggest founders + early insiders hold <strong style="color:white">~15–25%</strong> of current supply.</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:6px">🌐 Root Subnet (SN0)</div>
+        <div style="color:var(--text-muted);font-size:14px;line-height:1.6">18% of all block emissions go to the root subnet, distributed to validators proportional to their stake. This funds the ecosystem broadly, not a single entity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stakeholder table -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">Major Stakeholders & Backers</div>
+        <div class="chart-card-desc">Key players in the TAO ecosystem (estimated holdings, community data)</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.1)">
+            <th style="text-align:left;padding:10px 16px;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">Entity</th>
+            <th style="text-align:left;padding:10px 16px;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">Role</th>
+            <th style="text-align:left;padding:10px 16px;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">Est. Holdings</th>
+            <th style="text-align:left;padding:10px 16px;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:12px 16px;color:white;font-weight:600">Opentensor Foundation (OTF)</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(108,92,231,0.2);color:var(--tao-light);border-radius:4px;padding:2px 8px;font-size:11px">Protocol Steward</span></td>
+            <td style="padding:12px 16px;color:#a29bfe;font-weight:600">~600k–1M TAO</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">Manages core development, runs SN0 validators, controls governance proposals via Triumvirate</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:12px 16px;color:white;font-weight:600">Jacob Steeves (Unconditional)</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(253,203,110,0.2);color:#fdcb6e;border-radius:4px;padding:2px 8px;font-size:11px">Co-Founder</span></td>
+            <td style="padding:12px 16px;color:#fdcb6e;font-weight:600">Large (est. 500k+ TAO)</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">Genesis miner. Left active role ~2023 to focus on external projects. Known on-chain alias: "Unconditional"</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:12px 16px;color:white;font-weight:600">Ala Shaabana</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(253,203,110,0.2);color:#fdcb6e;border-radius:4px;padding:2px 8px;font-size:11px">Co-Founder / CEO</span></td>
+            <td style="padding:12px 16px;color:#fdcb6e;font-weight:600">Large (est. 500k+ TAO)</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">Active OTF CEO. Leads strategy and protocol development. Early miner from genesis block</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:12px 16px;color:white;font-weight:600">Polychain Capital</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(0,184,148,0.2);color:var(--success);border-radius:4px;padding:2px 8px;font-size:11px">Market Investor</span></td>
+            <td style="padding:12px 16px;color:var(--success);font-weight:600">Est. large position</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">Open market purchase; publicly disclosed TAO position. One of the earliest large institutional buyers</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:12px 16px;color:white;font-weight:600">Digital Currency Group (DCG)</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(0,184,148,0.2);color:var(--success);border-radius:4px;padding:2px 8px;font-size:11px">Market Investor</span></td>
+            <td style="padding:12px 16px;color:var(--success);font-weight:600">Est. significant position</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">DCG and subsidiary Grayscale have expressed public interest; open market accumulation</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+            <td style="padding:12px 16px;color:white;font-weight:600">Subnet Owners (collective)</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(52,152,219,0.2);color:#74b9ff;border-radius:4px;padding:2px 8px;font-size:11px">Ecosystem</span></td>
+            <td style="padding:12px 16px;color:#74b9ff;font-weight:600">~5–10% of supply</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">Subnet owners receive 18% of their subnet's emissions as an ongoing reward for managing the incentive mechanism</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px;color:white;font-weight:600">Open Market / Miners / Stakers</td>
+            <td style="padding:12px 16px;color:var(--muted)"><span style="background:rgba(255,255,255,0.1);color:white;border-radius:4px;padding:2px 8px;font-size:11px">Community</span></td>
+            <td style="padding:12px 16px;color:white;font-weight:600">~60–70% of supply</td>
+            <td style="padding:12px 16px;color:var(--muted);font-size:13px">Majority of supply is diffuse — held by miners, validators, delegators, and open market buyers globally</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;padding:12px 16px;background:rgba(255,200,0,0.07);border-radius:8px;border:1px solid rgba(255,200,0,0.15);font-size:12px;color:#fdcb6e">
+      ⚠️ <strong>Disclaimer:</strong> Holdings are community estimates based on on-chain analysis. No official breakdown exists. Unlike most tokens, TAO has no published vesting schedules or investor allocations — all supply is earned through network participation.
+    </div>
+  </div>
+</div>
+
+<!-- EMISSION MODEL UPDATE -->
+<div class="section" style="padding-top:0">
+  <div class="chart-card" style="background:linear-gradient(135deg,rgba(108,92,231,0.1) 0%,rgba(0,0,0,0) 100%);border-color:rgba(108,92,231,0.3)">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:8px">⚡ Taoflow (Nov 2025)</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6">Emissions now flow to subnets based on <strong style="color:white">net TAO staking inflows</strong>, not token prices. Subnets with real user engagement get more TAO. Subnets with net unstaking get zero.</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:8px">🔄 Emission Split</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6">
+          <div style="margin-bottom:4px"><span style="color:white">41%</span> → Subnet miners (top performers)</div>
+          <div style="margin-bottom:4px"><span style="color:white">41%</span> → Subnet validators + stakers</div>
+          <div style="margin-bottom:4px"><span style="color:white">18%</span> → Subnet owner (incentive)</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--tao-light);margin-bottom:8px">📊 Dynamic TAO</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6">Each subnet now has its own <strong style="color:white">alpha token</strong> (like shares in a subnet fund). Staking creates AMM-style liquidity pools. TAO price reflects aggregate subnet valuations.</div>
       </div>
     </div>
   </div>
@@ -319,22 +452,37 @@
         <div class="card-title">SN8 — Taoshi (Trading)</div>
         <div class="card-desc">The most financially relevant subnet. Miners submit trading signals (long/short) across crypto and equities. Best-performing predictions earn the most TAO. Real money is at stake — miners have actual skin in the game.</div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> This is DeFi + quant trading + AI all in one. If Taoshi signals work, it becomes a massive value-add and drives TAO demand.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Taoshi team (anon founders) · Open market funded</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">No VC raise. Bootstrapped via TAO mining. Known on-chain as "Taoshi" hotkeys. Subnet owner takes 18% of SN8 emissions.</div>
+        </div>
         <span class="card-tag" style="background:rgba(0,184,148,0.2);color:var(--success)">Finance/Quant</span>
       </div>
 
       <div class="card">
         <div class="card-icon">🏋️</div>
-        <div class="card-title">SN9 — Pretraining</div>
+        <div class="card-title">SN9 — Pretraining (Macrocosmos)</div>
         <div class="card-desc">Miners train foundation AI models from scratch and compete on benchmark performance. This is the "proof of useful work" at the core of Bittensor's value proposition — you earn TAO by making AI better.</div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> If this produces models competitive with GPT/Gemini, it's a paradigm shift. The race to train open, decentralized AI starts here.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Macrocosmos (London-based team)</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Founded by ex-DeepMind / research engineers. One of the highest-profile subnet teams. Raised external funding from AI-focused investors. Open-source model weights available on Hugging Face.</div>
+        </div>
         <span class="card-tag" style="background:rgba(231,76,60,0.2);color:var(--danger)">Model Training</span>
       </div>
 
       <div class="card">
         <div class="card-icon">⚙️</div>
-        <div class="card-title">SN27 — Compute</div>
+        <div class="card-title">SN27 — Compute (Taoverse)</div>
         <div class="card-desc">Decentralized GPU marketplace. Miners rent H100s, A100s and other hardware to the network. Validators verify compute tasks are completed correctly. Competes directly with AWS, Google Cloud, CoreWeave.</div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> GPU shortage is real. Unlocking idle compute globally at competitive prices could be worth billions.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Taoverse / independent team</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Community-run subnet. Multiple validator orgs competing. Backed by open-market TAO stakers. Growing institutional interest given AI compute demand.</div>
+        </div>
         <span class="card-tag" style="background:rgba(231,76,60,0.2);color:var(--danger)">GPU/Compute</span>
       </div>
 
@@ -343,6 +491,11 @@
         <div class="card-title">SN21 — FileTAO</div>
         <div class="card-desc">Decentralized file storage on Bittensor. Miners store encrypted data reliably across the network. Think Filecoin but with TAO incentives and the Bittensor consensus mechanism ensuring quality.</div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> AI needs data storage. Pairing SN9 (training) + SN21 (storage) creates a closed-loop decentralized AI infrastructure.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">OTF-incubated / independent validators</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Originally supported by Opentensor Foundation. Now operated by community validators. No external VC raise; funded through subnet emissions.</div>
+        </div>
         <span class="card-tag" style="background:rgba(155,89,182,0.2);color:#a29bfe">Storage</span>
       </div>
 
@@ -351,6 +504,11 @@
         <div class="card-title">SN18 — Cortex.t API</div>
         <div class="card-desc">The "AWS API Gateway" of Bittensor. Developers query Cortex.t and get back responses from the best miners across all subnets. Single API key, access to the whole Bittensor ecosystem.</div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> This is the monetization layer. If developers pay TAO to use Cortex.t, it creates real economic demand for the token.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Corcel.io team (Cortex.t)</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Run by Corcel team. Built a consumer product on top of SN18 — accessible AI inference marketplace. Funded through TAO emissions + Corcel.io subscription revenue.</div>
+        </div>
         <span class="card-tag" style="background:rgba(0,184,148,0.2);color:var(--success)">Developer API</span>
       </div>
 
@@ -359,7 +517,38 @@
         <div class="card-title">SN13 — Dataverse</div>
         <div class="card-desc">Miners scrape, clean, and curate datasets from the web. This feeds directly into pretraining (SN9) and other subnets. Data is the oil of AI — Dataverse is the refinery.</div>
         <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> High-quality data is the biggest bottleneck in AI. Decentralized data collection at scale could be transformative.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Macrocosmos (cross-subnet team)</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Same team behind SN9 (Pretraining). Dataverse feeds directly into their pretraining pipeline. Demonstrates vertical integration strategy within Bittensor ecosystem.</div>
+        </div>
         <span class="card-tag" style="background:rgba(52,152,219,0.2);color:#74b9ff">Data Pipeline</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">SN1 — Text Prompting (Apex)</div>
+        <div class="card-desc">The original flagship subnet. Miners serve LLM completions to validators who score quality. Think of it as a decentralized ChatGPT API — miners compete to give the best answers to prompts.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> SN1 is Bittensor's origin story — it proved the incentive model works and launched the ecosystem. Still one of the largest subnets by stake.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Opentensor Foundation (OTF)</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">OTF owns and operates SN1 directly. It's the protocol's reference implementation. Major validators: Taostats, Tensorplex, RoundTable21, Corcel. OTF earns 18% of SN1 emissions as subnet owner.</div>
+        </div>
+        <span class="card-tag" style="background:rgba(108,92,231,0.2);color:var(--tao-light)">OTF Flagship</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">SN2 — Omron (ZK Inference)</div>
+        <div class="card-desc">Miners perform AI inference with cryptographic zero-knowledge proofs — verifiable computation that's trustless. This is cutting-edge: provable AI outputs without revealing model weights.</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted)"><strong style="color:white">Why it matters:</strong> ZK + AI is the next frontier. If inference can be proven, Bittensor becomes the trust layer for all AI output — enterprise grade.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Team / Backers</div>
+          <div style="font-size:13px;color:white">Inference Labs (Omron team)</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Dedicated team focusing on zkML (zero-knowledge machine learning). Raised external funding, positioned at the intersection of ZK cryptography and AI inference. Strong technical team from ZK and ML backgrounds.</div>
+        </div>
+        <span class="card-tag" style="background:rgba(231,76,60,0.2);color:var(--danger)">ZK / Inference</span>
       </div>
     </div>
   </div>
@@ -512,10 +701,46 @@ function setTaoRange(range) {
   Plotly.relayout('taoChart', { 'xaxis.range': [start.toISOString().split('T')[0], now.toISOString().split('T')[0]] });
 }
 
+// Token distribution pie chart
+function buildDistChart() {
+  const labels = ['Open Market (Miners / Traders)', 'Validators + Stakers', 'Founders (est.)', 'Opentensor Foundation', 'Subnet Owners (ongoing)', 'Other Early Miners'];
+  const values = [40, 22, 16, 8, 8, 6];
+  const colors = ['rgba(108,92,231,0.8)', 'rgba(0,184,148,0.8)', 'rgba(253,203,110,0.8)', 'rgba(162,155,254,0.8)', 'rgba(52,152,219,0.8)', 'rgba(255,255,255,0.3)'];
+
+  Plotly.newPlot('distChart', [{
+    type: 'pie',
+    labels: labels,
+    values: values,
+    marker: { colors: colors, line: { color: 'rgba(0,0,0,0.3)', width: 1 } },
+    textfont: { family: 'Raleway', size: 11, color: 'white' },
+    hovertemplate: '<b>%{label}</b><br>~%{value}%<extra></extra>',
+    hole: 0.45,
+  }], {
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    margin: { t: 10, r: 10, b: 10, l: 10 },
+    font: { family: 'Raleway', color: '#7b7b9a', size: 11 },
+    showlegend: true,
+    legend: {
+      orientation: 'v',
+      x: 1.05,
+      y: 0.5,
+      font: { size: 11, color: '#aaa' },
+    },
+    annotations: [{
+      text: 'Community<br><b>~60%+</b>',
+      x: 0.5, y: 0.5,
+      font: { size: 12, color: 'white', family: 'Raleway' },
+      showarrow: false,
+    }]
+  }, { responsive: true, displayModeBar: false });
+}
+
 loadTaoPrice();
 loadTaoChart();
 buildSupplyChart();
 buildEmissionChart();
+buildDistChart();
 </script>
 </body>
 </html>
