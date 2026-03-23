@@ -554,6 +554,291 @@
   </div>
 </div>
 
+<!-- TAO TOKEN DISTRIBUTION & OWNERSHIP (DEEP) -->
+<div class="section" id="distribution-detail">
+  <div class="section-title">🪙 TAO Token Distribution &amp; Ownership</div>
+  <p class="section-desc">Approximate breakdown of the 21M TAO supply — no VC presale, no investor allocations, all earned through mining.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+    <!-- Donut chart -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Token Distribution (Approximate)</div>
+          <div class="chart-card-desc">Based on community on-chain analysis — no official allocation schedule</div>
+        </div>
+      </div>
+      <div id="distDonutChart" style="height:340px"></div>
+    </div>
+
+    <!-- Key facts -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="chart-card">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="font-size:22px;line-height:1.2">🚫</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">NO Venture Capital Funding</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">Self-funded entirely by co-founders <strong style="color:var(--tao-light)">Jacob Robert Steeves</strong> ("Const") and <strong style="color:var(--tao-light)">Ala Shaabana</strong>. Zero seed rounds, zero Series A, no cliff+vest schedules. Every TAO in existence was mined.</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="font-size:22px;line-height:1.2">🏛️</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Opentensor Foundation Controls Protocol</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">OTF stewards core development, protocol upgrades, and governance proposals via the Triumvirate. Accumulated TAO by running early validators during low-competition genesis period — not via presale. Est. holds <strong style="color:var(--tao-light)">600k–1M TAO</strong>.</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="font-size:22px;line-height:1.2">📉</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">No VC Unlock Pressure = No Institutional Dump Risk</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">Typical crypto projects allocate <strong style="color:#e74c3c">20–40%</strong> to VCs with 1-year cliff + 3-year vest. When those unlock, price pressure spikes. TAO has <strong style="color:var(--tao-light)">zero</strong> such lockup schedules — no calendar-based sell events.</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="font-size:22px;line-height:1.2">⛏️</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">~29% Still to Be Mined</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">With ~45.7% of max supply currently circulating, <strong style="color:var(--tao-light)">~29%</strong> of total TAO hasn't been issued yet. Halvings every ~10.5M blocks reduce emissions over time — like Bitcoin, early participants earn the most.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBNET DEEP DIVES -->
+<style>
+.sdc { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--tao); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+.sdc-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.sdc-num { background: rgba(108,92,231,0.2); color: var(--tao-light); font-weight: 700; font-size: 13px; padding: 6px 12px; border-radius: 8px; white-space: nowrap; }
+.sdc-title { font-size: 17px; font-weight: 600; }
+.sdc-team { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.sdc-badges { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.sdc-badge { font-size: 11px; padding: 3px 10px; border-radius: 8px; font-weight: 600; background: rgba(0,184,148,0.15); color: #00b894; }
+.sdc-badge.vc { background: rgba(231,76,60,0.15); color: #e74c3c; }
+.sdc-desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+.sdc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sdc-item { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 12px; }
+.sdc-item strong { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--tao-light); display: block; margin-bottom: 6px; }
+.sdc-item p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+</style>
+
+<div class="section" id="subnet-details">
+  <div class="section-title">🔬 Key Subnet Deep Dives</div>
+  <p class="section-desc">Ownership, mining mechanics, and competitive context for Bittensor's most significant subnets.</p>
+
+  <!-- SN1 -->
+  <div class="sdc">
+    <div class="sdc-header">
+      <div class="sdc-num">SN1</div>
+      <div>
+        <div class="sdc-title">Apex — Text Prompting</div>
+        <div class="sdc-team">Owner: Opentensor Foundation</div>
+      </div>
+      <div class="sdc-badges">
+        <span class="sdc-badge">No VC</span>
+        <span class="sdc-badge" style="background:rgba(162,155,254,0.15);color:var(--tao-light)">OTF Flagship</span>
+      </div>
+    </div>
+    <p class="sdc-desc">The original Bittensor subnet and protocol reference implementation. Miners run large language models and compete to produce the highest-quality text completions. Validators score responses using automated reward models, and TAO flows to the top performers. SN1 proved the incentive mechanism works at scale and remains one of the largest subnets by delegated stake.</p>
+    <div class="sdc-grid">
+      <div class="sdc-item">
+        <strong>How to Mine</strong>
+        <p>Run an LLM (Llama 3, Mistral, Mixtral, etc.) and respond to prompts issued by validators. Scored on response quality via automated reward models. Typically requires 24GB+ VRAM.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Use Case</strong>
+        <p>General AI inference marketplace. Anyone can query the best open-source LLMs via Bittensor, with TAO payments routing to the top-performing miners in real time.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Competitors</strong>
+        <p>OpenAI API, Anthropic API, Together.ai, Replicate. Differentiator: decentralized, censorship-resistant, community-owned inference with no single point of control.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>VC / Funding</strong>
+        <p>No external VC. Foundation-owned subnet. OTF receives 18% of SN1 emissions as subnet owner — the primary mechanism for foundation revenue. Fully on-chain funded.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SN8 -->
+  <div class="sdc" style="border-left-color:#00b894">
+    <div class="sdc-header">
+      <div class="sdc-num" style="background:rgba(0,184,148,0.2);color:#00b894">SN8</div>
+      <div>
+        <div class="sdc-title">Taoshi / PTN — Proprietary Trading Network</div>
+        <div class="sdc-team">Owner: Taoshi team (Matt Dodds et al)</div>
+      </div>
+      <div class="sdc-badges">
+        <span class="sdc-badge vc">Seed Funding</span>
+        <span class="sdc-badge" style="background:rgba(0,184,148,0.15);color:#00b894">Quant Trading</span>
+      </div>
+    </div>
+    <p class="sdc-desc">A decentralized quant trading signal network. Miners act as trading algorithms, submitting directional signals (long/short/flat) on cryptocurrency pairs. Validators track signal performance over time and miners are rewarded based on risk-adjusted returns. No capital is deployed — it's a pure signal competition with real economic stakes.</p>
+    <div class="sdc-grid">
+      <div class="sdc-item">
+        <strong>How to Mine</strong>
+        <p>Submit trading signals (long/short/flat) on crypto pairs like BTC/USD and ETH/USD. Signals are evaluated over rolling windows and scored on Sharpe ratio and cumulative returns.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Use Case</strong>
+        <p>Decentralized quant trading signals marketplace. Institutional and retail traders can access the top-performing signals, creating genuine real-world demand for miner output.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Competitors</strong>
+        <p>Numerai (similar tournament model), traditional quant funds like Two Sigma and Citadel. Differentiator: open permissionless participation, on-chain rewards, real-time public leaderboard.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>VC / Funding</strong>
+        <p>Taoshi raised undisclosed seed funding. The team operates taomarkets.ai as a commercial product. VC involvement is limited relative to typical DeFi projects.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SN9 -->
+  <div class="sdc" style="border-left-color:#fdcb6e">
+    <div class="sdc-header">
+      <div class="sdc-num" style="background:rgba(253,203,110,0.2);color:#fdcb6e">SN9</div>
+      <div>
+        <div class="sdc-title">Pretraining — Foundation Model Competition</div>
+        <div class="sdc-team">Owner: Community / Open (Macrocosmos)</div>
+      </div>
+      <div class="sdc-badges">
+        <span class="sdc-badge">No VC</span>
+        <span class="sdc-badge" style="background:rgba(253,203,110,0.15);color:#fdcb6e">Open Source</span>
+      </div>
+    </div>
+    <p class="sdc-desc">The most ambitious subnet in Bittensor: miners train language models from scratch and compete for the highest benchmark scores. Validators continuously evaluate submitted models on MMLU, ARC, HellaSwag, and other standard evals. The miner with the best model earns the most TAO — creating a permanently running open-source model training race funded by the network.</p>
+    <div class="sdc-grid">
+      <div class="sdc-item">
+        <strong>How to Mine</strong>
+        <p>Train a language model from scratch (or start from a permissive base), upload it to Hugging Face, and register with validators. Must continuously improve to maintain ranking as competitors submit better models.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Use Case</strong>
+        <p>Open-source foundation model training funded by TAO emissions. All models produced are publicly available — a community-owned alternative to closed AI labs with economic skin in the game.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Competitors</strong>
+        <p>OpenAI GPT series, Meta Llama, Mistral, EleutherAI. Differentiator: economically incentivized open-source model development with decentralized on-chain reward distribution.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>VC / Funding</strong>
+        <p>No external VC. Community-operated with Macrocosmos as primary maintainer. Funded entirely through SN9 emissions. One of the most decentralized and open subnets in the ecosystem.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SN18 -->
+  <div class="sdc" style="border-left-color:#74b9ff">
+    <div class="sdc-header">
+      <div class="sdc-num" style="background:rgba(52,152,219,0.2);color:#74b9ff">SN18</div>
+      <div>
+        <div class="sdc-title">Cortex.t — Developer API Gateway</div>
+        <div class="sdc-team">Owner: Corcel team</div>
+      </div>
+      <div class="sdc-badges">
+        <span class="sdc-badge vc">Undisclosed VC</span>
+        <span class="sdc-badge" style="background:rgba(52,152,219,0.15);color:#74b9ff">Dev API</span>
+      </div>
+    </div>
+    <p class="sdc-desc">The API monetization layer for Bittensor. Miners route and serve developer requests across all subnets via a unified REST API. Think of it as AWS Bedrock built on Bittensor — a single API key gives developers access to the entire ecosystem. Corcel.io is the consumer-facing product built on top of SN18, the most commercially developed subnet.</p>
+    <div class="sdc-grid">
+      <div class="sdc-item">
+        <strong>How to Mine</strong>
+        <p>Route and fulfill API requests from the Corcel gateway layer. Scored on response quality, latency, uptime, and throughput. Requires reliable high-bandwidth infrastructure and low-latency routing.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Use Case</strong>
+        <p>Developer API gateway to all Bittensor subnets. Enables app builders to integrate Bittensor AI capabilities without running their own nodes or understanding subnet-level complexity.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Competitors</strong>
+        <p>AWS Bedrock, Azure OpenAI Service, Google Vertex AI. Differentiator: decentralized backend, censorship-resistant, TAO-powered economics with no per-seat pricing lock-in or vendor dependency.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>VC / Funding</strong>
+        <p>Corcel team has undisclosed external funding. Generates subscription revenue via corcel.io alongside TAO emissions. The most commercially mature and externally funded subnet team.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SN21 -->
+  <div class="sdc" style="border-left-color:#a29bfe">
+    <div class="sdc-header">
+      <div class="sdc-num" style="background:rgba(162,155,254,0.2);color:#a29bfe">SN21</div>
+      <div>
+        <div class="sdc-title">FileTAO — Decentralized AI Data Storage</div>
+        <div class="sdc-team">Owner: Neural Internet team</div>
+      </div>
+      <div class="sdc-badges">
+        <span class="sdc-badge">No VC</span>
+        <span class="sdc-badge" style="background:rgba(162,155,254,0.15);color:#a29bfe">Storage</span>
+      </div>
+    </div>
+    <p class="sdc-desc">Decentralized encrypted data storage incentivized by TAO. Miners store encrypted data chunks across distributed nodes. Validators periodically challenge miners to prove data is intact and retrievable. Scored on retrieval speed, uptime, and data integrity. Designed specifically for AI dataset and model checkpoint storage at scale.</p>
+    <div class="sdc-grid">
+      <div class="sdc-item">
+        <strong>How to Mine</strong>
+        <p>Run a storage node that accepts encrypted data chunks from the network. Validators issue random retrieval challenges — miners must return data quickly and correctly. Scored on uptime and retrieval latency.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Use Case</strong>
+        <p>Decentralized AI data storage layer. Paired with SN9 (pretraining) and SN13 (data curation), it completes a full decentralized AI data pipeline from collection → storage → training.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Competitors</strong>
+        <p>Filecoin, Arweave, IPFS, Storj. Differentiator: AI-native storage with Bittensor's incentive scoring, designed for large model checkpoints and AI dataset storage specifically.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>VC / Funding</strong>
+        <p>No known external VC. Neural Internet team is community-funded via subnet emissions. Originally incubated with OTF support — now fully self-sustaining through on-chain rewards.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SN27 -->
+  <div class="sdc" style="border-left-color:#e17055">
+    <div class="sdc-header">
+      <div class="sdc-num" style="background:rgba(225,112,85,0.2);color:#e17055">SN27</div>
+      <div>
+        <div class="sdc-title">Compute — Decentralized GPU Marketplace</div>
+        <div class="sdc-team">Owner: Neurotensor / Community (Taoverse)</div>
+      </div>
+      <div class="sdc-badges">
+        <span class="sdc-badge">No VC</span>
+        <span class="sdc-badge" style="background:rgba(225,112,85,0.15);color:#e17055">GPU Compute</span>
+      </div>
+    </div>
+    <p class="sdc-desc">A decentralized GPU compute marketplace on Bittensor. Miners register GPU resources (A100s, H100s, consumer RTX cards) and complete compute tasks assigned by validators. Scored against performance benchmarks including FLOPS, memory bandwidth, and task completion time. Creates a permissionless alternative to centralized cloud GPU providers at a time when GPU scarcity is acute.</p>
+    <div class="sdc-grid">
+      <div class="sdc-item">
+        <strong>How to Mine</strong>
+        <p>Register GPU hardware with the subnet and complete assigned compute workloads (matrix ops, ML training tasks). Validators benchmark hardware and score on raw performance, reliability, and sustained uptime.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Use Case</strong>
+        <p>Decentralized GPU marketplace for AI workloads. Demand side: researchers, small labs, and developers needing affordable GPU access without cloud lock-in or waitlists.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>Competitors</strong>
+        <p>Akash Network, Render Network, CoreWeave, Lambda Labs, AWS EC2 GPU. Differentiator: TAO-incentivized, permissionless, natively integrated with other Bittensor subnets.</p>
+      </div>
+      <div class="sdc-item">
+        <strong>VC / Funding</strong>
+        <p>No known VC funding. Community-operated by Neurotensor team. Emissions-funded. High strategic value as AI compute demand grows — one of the most watched subnets for future external investment.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- HOW TO PARTICIPATE -->
 <div style="background:rgba(108,92,231,0.05);border-top:1px solid rgba(108,92,231,0.15);border-bottom:1px solid rgba(108,92,231,0.15);padding:80px 40px;">
   <div style="max-width:1200px;margin:0 auto;">
@@ -736,11 +1021,42 @@ function buildDistChart() {
   }, { responsive: true, displayModeBar: false });
 }
 
+function buildDistDonutChart() {
+  const labels = ['Miners & Validators (earned over time)', 'Early Contributors & Foundation', 'Remaining to be mined'];
+  const values = [50, 21, 29];
+  const colors = ['rgba(108,92,231,0.85)', 'rgba(253,203,110,0.85)', 'rgba(162,155,254,0.45)'];
+
+  Plotly.newPlot('distDonutChart', [{
+    type: 'pie',
+    labels: labels,
+    values: values,
+    marker: { colors: colors, line: { color: 'rgba(0,0,0,0.4)', width: 2 } },
+    textfont: { family: 'Raleway', size: 11, color: 'white' },
+    hovertemplate: '<b>%{label}</b><br>%{value}%<extra></extra>',
+    hole: 0.55,
+    textposition: 'outside',
+    textinfo: 'label+percent',
+  }], {
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: 'transparent',
+    margin: { t: 30, r: 10, b: 30, l: 10 },
+    font: { family: 'Raleway', color: '#7b7b9a', size: 11 },
+    showlegend: false,
+    annotations: [{
+      text: 'No VC<br><b>Presale</b>',
+      x: 0.5, y: 0.5,
+      font: { size: 14, color: 'white', family: 'Raleway' },
+      showarrow: false,
+    }]
+  }, { responsive: true, displayModeBar: false });
+}
+
 loadTaoPrice();
 loadTaoChart();
 buildSupplyChart();
 buildEmissionChart();
 buildDistChart();
+buildDistDonutChart();
 </script>
 </body>
 </html>
